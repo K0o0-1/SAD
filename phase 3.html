@@ -1,0 +1,2144 @@
+<!DOCTYPE html>
+
+<html data-study-version="1" data-theme="light" dir="rtl" lang="ar">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1, viewport-fit=cover" name="viewport"/>
+<meta content="المرحلة الثالثة — التصميم | منهج تحليل وتصميم النظم — Systems Analysis &amp; Design" name="description"/>
+<meta content="light dark" name="color-scheme"/>
+<meta content="#0d7377" id="metaTheme" name="theme-color"/>
+<title>Phase 3 — التصميم | تحليل وتصميم النظم</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&amp;family=Almarai:wght@300;400;700;800&amp;display=swap" rel="stylesheet"/>
+<style>
+/* ============================================================
+   Design Tokens
+   ============================================================ */
+:root{
+  --bg:#eef1f6;
+  --bg-soft:#f7f9fc;
+  --surface:#ffffff;
+  --surface-2:#f8fafc;
+  --text:#0f1b2d;
+  --text-soft:#33445c;
+  --muted:#61738a;
+  --border:#e3e8ef;
+  --border-soft:#eef2f7;
+
+  --brand:#0d7377;
+  --brand-2:#0a5c60;
+  --brand-soft:#e6f4f4;
+  --brand-ring:rgba(13,115,119,.18);
+
+  --accent:#d97706;
+  --accent-soft:#fef3e2;
+
+  --red:#dc2626;
+  --red-soft:#fdecec;
+  --green:#059669;
+  --green-soft:#e7f7f1;
+  --amber:#d97706;
+  --amber-soft:#fef4e6;
+  --blue:#2563eb;
+  --blue-soft:#eaf1fe;
+  --purple:#7c3aed;
+  --purple-soft:#f0e9fe;
+
+  --radius:18px;
+  --radius-sm:12px;
+  --shadow-sm:0 1px 2px rgba(16,24,40,.05);
+  --shadow:0 1px 2px rgba(16,24,40,.04), 0 12px 28px -16px rgba(16,24,40,.22);
+  --shadow-lg:0 24px 60px -28px rgba(16,24,40,.35);
+
+  --topbar-bg:rgba(255,255,255,.82);
+  --font:'Cairo',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --font-alt:'Almarai','Cairo',sans-serif;
+}
+
+[data-theme="dark"]{
+  --bg:#0b1220;
+  --surface:#131c2e;
+  --surface-2:#182238;
+  --text:#eef3fb;
+  --text-soft:#c3cfe2;
+  --muted:#8a9ab3;
+  --border:#25324a;
+  --border-soft:#1e2a3f;
+
+  --brand:#2dd4bf;
+  --brand-2:#5eead4;
+  --brand-soft:#10312f;
+  --brand-ring:rgba(45,212,191,.2);
+
+  --accent:#fbbf24;
+  --accent-soft:#33270d;
+
+  --red:#f87171;
+  --red-soft:#3a1618;
+  --green:#34d399;
+  --green-soft:#0f2f26;
+  --amber:#fbbf24;
+  --amber-soft:#332610;
+  --blue:#60a5fa;
+  --blue-soft:#12233f;
+  --purple:#a78bfa;
+  --purple-soft:#241b3a;
+
+  --shadow-sm:0 1px 2px rgba(0,0,0,.4);
+  --shadow:0 1px 2px rgba(0,0,0,.3), 0 14px 32px -18px rgba(0,0,0,.7);
+  --shadow-lg:0 30px 70px -30px rgba(0,0,0,.85);
+
+  --topbar-bg:rgba(11,18,32,.82);
+}
+
+/* ============================================================
+   Base / Reset
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+html{
+  scroll-behavior:smooth;
+  scroll-padding-top:96px;
+  -webkit-text-size-adjust:100%;
+  text-size-adjust:100%;
+  overflow-x:hidden;
+}
+
+body{
+  font-family:var(--font);
+  background:var(--bg);
+  color:var(--text);
+  line-height:1.85;
+  font-size:16px;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  overflow-x:hidden;
+  min-height:100vh;
+  -webkit-tap-highlight-color:rgba(13,115,119,.15);
+}
+
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background:
+    radial-gradient(900px 500px at 100% -10%, var(--brand-ring), transparent 65%),
+    radial-gradient(700px 420px at -10% 8%, rgba(217,119,6,.10), transparent 60%);
+  pointer-events:none;
+  z-index:0;
+}
+
+::selection{background:var(--brand);color:#fff}
+
+img,svg{max-width:100%;display:block}
+a{color:inherit;text-decoration:none}
+ul,ol{list-style:none}
+button{font-family:inherit}
+
+::-webkit-scrollbar{width:11px;height:11px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;border:3px solid var(--bg)}
+::-webkit-scrollbar-thumb:hover{background:var(--muted)}
+
+/* ============================================================
+   Top Bar
+   ============================================================ */
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:100;
+  background:var(--topbar-bg);
+  backdrop-filter:blur(16px) saturate(180%);
+  -webkit-backdrop-filter:blur(16px) saturate(180%);
+  border-bottom:1px solid var(--border);
+}
+
+.topbar-inner{
+  max-width:1440px;
+  margin:0 auto;
+  padding:0 20px;
+  min-height:66px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.brand{
+  display:flex;
+  align-items:center;
+  gap:11px;
+  font-weight:800;
+  font-size:15.5px;
+  white-space:nowrap;
+  min-width:0;
+}
+
+.brand-mark{
+  width:36px;height:36px;
+  border-radius:11px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  color:#fff;
+  font-family:var(--font-alt);
+  font-weight:800;
+  font-size:13px;
+  box-shadow:0 6px 16px -6px var(--brand-ring);
+  flex:0 0 auto;
+}
+
+.brand-text{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.brand-text small{
+  display:block;
+  font-size:11px;
+  font-weight:400;
+  color:var(--muted);
+  line-height:1.3;
+}
+
+.topbar-spacer{flex:1;min-width:8px}
+.topbar-actions{display:flex;align-items:center;gap:8px;flex:0 0 auto}
+
+.icon-btn{
+  width:40px;height:40px;
+  display:grid;place-items:center;
+  border-radius:11px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text-soft);
+  cursor:pointer;
+  transition:color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease;
+  flex:0 0 auto;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.icon-btn:hover{
+  color:var(--brand);
+  border-color:var(--brand);
+  background:var(--brand-soft);
+  transform:translateY(-1px);
+}
+.icon-btn:active{transform:translateY(0) scale(.96)}
+.icon-btn svg{width:19px;height:19px}
+
+.menu-btn{display:none}
+
+.progress-track{
+  position:absolute;
+  bottom:-1px;right:0;left:0;
+  height:2.5px;
+  background:transparent;
+  pointer-events:none;
+}
+.progress-bar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,var(--brand),var(--accent));
+  border-radius:99px;
+  transition:width .12s linear;
+}
+
+/* ============================================================
+   Hero
+   ============================================================ */
+.hero{
+  position:relative;
+  z-index:1;
+  max-width:1440px;
+  margin:0 auto;
+  padding:64px 24px 40px;
+}
+
+.hero-badge{
+  display:inline-flex;
+  align-items:center;
+  gap:9px;
+  padding:7px 16px 7px 12px;
+  border-radius:99px;
+  background:var(--brand-soft);
+  color:var(--brand);
+  border:1px solid var(--brand-ring);
+  font-size:13px;
+  font-weight:700;
+  margin-bottom:22px;
+}
+.hero-badge .dot{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--brand);
+  box-shadow:0 0 0 4px var(--brand-ring);
+  animation:pulse 2.4s ease-in-out infinite;
+  flex:0 0 auto;
+}
+@keyframes pulse{
+  0%,100%{opacity:1;transform:scale(1)}
+  50%{opacity:.55;transform:scale(.82)}
+}
+
+.hero h1{
+  font-size:clamp(28px,5vw,52px);
+  font-weight:900;
+  line-height:1.45;
+  margin-bottom:18px;
+  max-width:22ch;
+}
+
+.hero h1 .grad{
+  background:linear-gradient(120deg,var(--brand) 0%,var(--accent) 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  color:var(--brand);
+}
+
+.hero p.lead{
+  font-size:clamp(15.5px,1.6vw,18px);
+  color:var(--muted);
+  max-width:72ch;
+  line-height:1.95;
+  margin-bottom:26px;
+}
+
+.hero-ref{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  font-size:13.5px;
+  color:var(--muted);
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:10px 18px;
+  border-radius:var(--radius-sm);
+  box-shadow:var(--shadow-sm);
+  margin-bottom:34px;
+  max-width:100%;
+  flex-wrap:wrap;
+  line-height:1.7;
+}
+.hero-ref strong{color:var(--text-soft);font-weight:700}
+
+.hero-stats{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:14px;
+  margin-top:8px;
+}
+
+.stat{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:20px 22px;
+  box-shadow:var(--shadow-sm);
+  transition:transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+  position:relative;
+  overflow:hidden;
+}
+.stat::after{
+  content:"";
+  position:absolute;
+  inset-inline-start:0;top:0;bottom:0;
+  width:3px;
+  background:linear-gradient(180deg,var(--brand),var(--accent));
+  opacity:.85;
+}
+.stat:hover{transform:translateY(-3px);box-shadow:var(--shadow);border-color:var(--brand-ring)}
+.stat b{
+  display:block;
+  font-family:var(--font-alt);
+  font-size:clamp(24px,4vw,30px);
+  font-weight:800;
+  color:var(--brand);
+  line-height:1.2;
+  letter-spacing:-.5px;
+}
+.stat span{font-size:13px;color:var(--muted);font-weight:600;line-height:1.6;display:block;margin-top:2px}
+
+/* ============================================================
+   Layout
+   ============================================================ */
+.layout{
+  position:relative;
+  max-width:1440px;
+  margin:0 auto;
+  padding:24px 24px 100px;
+  display:grid;
+  grid-template-columns:296px minmax(0,1fr);
+  gap:44px;
+  align-items:start;
+}
+
+/* ============================================================
+   Sidebar TOC
+   ============================================================ */
+.sidebar{
+  position:sticky;
+  top:88px;
+  max-height:calc(100vh - 112px);
+  max-height:calc(100dvh - 112px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+  padding-inline-end:6px;
+  padding-bottom:20px;
+  background:var(--surface);
+  border-radius:var(--radius);
+  -webkit-overflow-scrolling:touch;
+}
+.sidebar::-webkit-scrollbar{width:6px}
+.sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:99px;border:2px solid var(--bg)}
+
+.toc{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px;
+  box-shadow:var(--shadow-sm);
+}
+
+.toc-title{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  font-size:11.5px;
+  font-weight:800;
+  color:var(--muted);
+  margin-bottom:14px;
+  padding:0 4px;
+  line-height:1.6;
+}
+.toc-title span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+.toc-close{
+  display:none;
+  width:32px;height:32px;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:var(--surface-2);
+  color:var(--text-soft);
+  cursor:pointer;
+  place-items:center;
+  padding:0;
+  flex:0 0 auto;
+  transition:background .18s ease, color .18s ease, border-color .18s ease, transform .12s ease;
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+}
+.toc-close:hover{background:var(--red-soft);color:var(--red);border-color:var(--red)}
+.toc-close:active{transform:scale(.94)}
+.toc-close svg{width:15px;height:15px}
+
+.toc-group{margin-bottom:16px}
+.toc-group:last-child{margin-bottom:0}
+
+.toc-group > .toc-label{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-size:13px;
+  font-weight:800;
+  color:var(--text);
+  padding:8px 10px;
+  border-radius:10px;
+  margin-bottom:4px;
+  transition:background .18s ease, color .18s ease;
+  line-height:1.6;
+}
+.toc-group > .toc-label:hover{background:var(--surface-2);color:var(--brand)}
+
+.toc-label .toc-num{
+  width:24px;height:24px;
+  border-radius:8px;
+  display:grid;place-items:center;
+  background:var(--brand-soft);
+  color:var(--brand);
+  font-family:var(--font-alt);
+  font-size:11px;
+  font-weight:800;
+  flex:0 0 auto;
+}
+
+.toc-list{
+  padding-inline-start:14px;
+  border-inline-start:1.5px solid var(--border-soft);
+  margin-inline-start:13px;
+}
+
+.toc-list a{
+  display:block;
+  font-size:13px;
+  color:var(--muted);
+  padding:5.5px 11px;
+  border-radius:9px;
+  transition:background .16s ease, color .16s ease;
+  line-height:1.7;
+  font-weight:500;
+  -webkit-tap-highlight-color:transparent;
+}
+.toc-list a:hover{color:var(--brand);background:var(--brand-soft)}
+.toc-list a.active{
+  color:var(--brand);
+  background:var(--brand-soft);
+  font-weight:700;
+}
+
+/* ============================================================
+   Content
+   ============================================================ */
+.content{min-width:0}
+
+.section{
+  margin-bottom:56px;
+  scroll-margin-top:96px;
+}
+
+.section-kicker{
+  font-size:12px;
+  font-weight:800;
+  color:var(--brand);
+  display:flex;
+  align-items:center;
+  gap:8px;
+  line-height:1.7;
+}
+.section-kicker::before{
+  content:"";
+  width:22px;height:2px;
+  background:var(--brand);
+  border-radius:99px;
+  flex:0 0 auto;
+}
+
+.section h2{
+  font-size:clamp(22px,3vw,32px);
+  font-weight:900;
+  line-height:1.5;
+  margin:6px 0 10px;
+}
+
+.section-sub{
+  color:var(--muted);
+  font-size:15px;
+  max-width:78ch;
+  line-height:1.95;
+  margin-bottom:26px;
+}
+
+.chapter-banner{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  padding:34px 32px;
+  margin-bottom:30px;
+  color:#fff;
+  background:linear-gradient(135deg,#0d7377 0%,#0a4f52 55%,#08363a 100%);
+  box-shadow:var(--shadow-lg);
+}
+[data-theme="dark"] .chapter-banner{
+  background:linear-gradient(135deg,#0f3b3d 0%,#0c2b2d 55%,#0a1f21 100%);
+  border:1px solid #1b4a4c;
+}
+.chapter-banner::before{
+  content:"";
+  position:absolute;
+  width:340px;height:340px;
+  border-radius:50%;
+  background:radial-gradient(circle,rgba(255,255,255,.16),transparent 70%);
+  top:-150px;inset-inline-start:-90px;
+  pointer-events:none;
+}
+.chapter-banner::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);
+  background-size:36px 36px;
+  -webkit-mask-image:linear-gradient(120deg,#000,transparent 75%);
+  mask-image:linear-gradient(120deg,#000,transparent 75%);
+  pointer-events:none;
+}
+.chapter-banner > *{position:relative;z-index:1}
+
+.chapter-banner .ch-tag{
+  display:inline-block;
+  font-family:var(--font-alt);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:2px;
+  padding:5px 14px;
+  border-radius:99px;
+  background:rgba(255,255,255,.16);
+  border:1px solid rgba(255,255,255,.26);
+  margin-bottom:14px;
+}
+.chapter-banner h2{
+  font-size:clamp(21px,3vw,30px);
+  font-weight:900;
+  margin-bottom:10px;
+  line-height:1.55;
+}
+.chapter-banner p{
+  font-size:15px;
+  line-height:1.95;
+  color:rgba(255,255,255,.85);
+  max-width:75ch;
+}
+
+.card{
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:24px 26px;
+  margin-bottom:16px;
+  box-shadow:var(--shadow-sm);
+  transition:border-color .24s ease, box-shadow .24s ease, transform .24s ease;
+  scroll-margin-top:96px;
+}
+.card:hover{
+  border-color:var(--brand-ring);
+  box-shadow:var(--shadow);
+  transform:translateY(-2px);
+}
+
+.card-head{
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:12px;
+  margin-bottom:16px;
+  padding-bottom:14px;
+  border-bottom:1px dashed var(--border);
+}
+
+.num{
+  font-family:var(--font-alt);
+  font-size:12.5px;
+  font-weight:800;
+  padding:5px 12px;
+  border-radius:9px;
+  background:var(--brand-soft);
+  color:var(--brand);
+  border:1px solid var(--brand-ring);
+  flex:0 0 auto;
+  letter-spacing:.3px;
+}
+
+.card-head h3{
+  font-size:18.5px;
+  font-weight:800;
+  flex:1 1 180px;
+  min-width:0;
+  line-height:1.6;
+}
+
+.badge{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  font-size:11.5px;
+  font-weight:800;
+  padding:5px 12px;
+  border-radius:99px;
+  white-space:nowrap;
+  border:1px solid transparent;
+  flex:0 0 auto;
+  line-height:1.5;
+}
+.b-red{background:var(--red-soft);color:var(--red);border-color:rgba(220,38,38,.22)}
+.b-green{background:var(--green-soft);color:var(--green);border-color:rgba(5,150,105,.22)}
+.b-amber{background:var(--amber-soft);color:var(--amber);border-color:rgba(217,119,6,.22)}
+.b-blue{background:var(--blue-soft);color:var(--blue);border-color:rgba(37,99,235,.22)}
+.b-purple{background:var(--purple-soft);color:var(--purple);border-color:rgba(124,58,237,.22)}
+[data-theme="dark"] .b-red{border-color:rgba(248,113,113,.3)}
+[data-theme="dark"] .b-green{border-color:rgba(52,211,153,.3)}
+[data-theme="dark"] .b-amber{border-color:rgba(251,191,36,.3)}
+[data-theme="dark"] .b-blue{border-color:rgba(96,165,250,.3)}
+[data-theme="dark"] .b-purple{border-color:rgba(167,139,250,.3)}
+
+.block{margin-bottom:18px}
+.block:last-child{margin-bottom:0}
+
+.block h4{
+  font-size:13.5px;
+  font-weight:800;
+  color:var(--brand);
+  margin-bottom:10px;
+  display:flex;
+  align-items:center;
+  gap:8px;
+  line-height:1.7;
+}
+.block h4::before{
+  content:"";
+  width:4px;height:14px;
+  border-radius:99px;
+  background:linear-gradient(180deg,var(--brand),var(--accent));
+  flex:0 0 auto;
+}
+
+.block p{
+  font-size:14.6px;
+  color:var(--text-soft);
+  line-height:1.95;
+}
+
+.list{display:flex;flex-direction:column;gap:7px}
+.list li{
+  position:relative;
+  padding-inline-start:22px;
+  font-size:14.5px;
+  color:var(--text-soft);
+  line-height:1.9;
+}
+.list li::before{
+  content:"";
+  position:absolute;
+  inset-inline-start:6px;
+  top:12px;
+  width:6px;height:6px;
+  border-radius:50%;
+  background:var(--brand);
+  opacity:.55;
+}
+.list li strong{color:var(--text);font-weight:700}
+
+.grid-2{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:9px 22px;
+}
+
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{
+  font-family:var(--font-alt);
+  font-size:11.8px;
+  font-weight:700;
+  padding:5px 12px;
+  border-radius:8px;
+  background:var(--surface-2);
+  color:var(--text-soft);
+  border:1px solid var(--border);
+  transition:background .16s ease, color .16s ease, border-color .16s ease, transform .16s ease;
+  letter-spacing:.2px;
+  line-height:1.6;
+  max-width:100%;
+  word-break:break-word;
+}
+.chip:hover{
+  background:var(--brand-soft);
+  color:var(--brand);
+  border-color:var(--brand-ring);
+  transform:translateY(-1px);
+}
+
+.callout{
+  display:flex;
+  gap:14px;
+  padding:16px 18px;
+  border-radius:var(--radius-sm);
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-inline-start:3px solid var(--brand);
+  margin:16px 0;
+}
+.callout .co-icon{font-size:18px;line-height:1.5;flex:0 0 auto}
+.callout .co-body{font-size:14.3px;line-height:1.95;color:var(--text-soft);min-width:0}
+.callout .co-body strong{color:var(--text)}
+.callout.warn{
+  border-inline-start-color:var(--accent);
+  background:var(--accent-soft);
+  border-color:transparent;
+  border-inline-start-width:3px;
+}
+.callout.danger{
+  border-inline-start-color:var(--red);
+  background:var(--red-soft);
+  border-color:transparent;
+  border-inline-start-width:3px;
+}
+.callout.success{
+  border-inline-start-color:var(--green);
+  background:var(--green-soft);
+  border-color:transparent;
+  border-inline-start-width:3px;
+}
+
+.flow{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:8px;
+  padding:16px 18px;
+  background:var(--surface-2);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  margin:14px 0;
+}
+.flow .step{
+  font-size:12.8px;
+  font-weight:700;
+  padding:6px 13px;
+  border-radius:9px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  color:var(--text-soft);
+  line-height:1.7;
+  max-width:100%;
+  word-break:break-word;
+}
+.flow .arrow{color:var(--brand);font-weight:800;font-size:14px;opacity:.75;flex:0 0 auto;line-height:1}
+.flow .step.hi{background:var(--brand-soft);color:var(--brand);border-color:var(--brand-ring)}
+
+.table-wrap{
+  overflow-x:auto;
+  -webkit-overflow-scrolling:touch;
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  background:var(--surface);
+  box-shadow:var(--shadow-sm);
+  margin-bottom:16px;
+  max-width:100%;
+}
+table{width:100%;border-collapse:collapse;font-size:14px;min-width:520px}
+thead th{
+  background:var(--surface-2);
+  text-align:right;
+  padding:14px 18px;
+  font-weight:800;
+  font-size:12.5px;
+  color:var(--muted);
+  border-bottom:1px solid var(--border);
+  white-space:nowrap;
+}
+tbody td{
+  padding:13px 18px;
+  border-bottom:1px solid var(--border-soft);
+  color:var(--text-soft);
+  line-height:1.85;
+  vertical-align:top;
+}
+tbody tr:last-child td{border-bottom:none}
+tbody tr{transition:background .16s ease}
+tbody tr:hover{background:var(--surface-2)}
+tbody td:first-child{font-weight:700;color:var(--text)}
+
+.mastery-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+  gap:16px;
+}
+.mastery{
+  border-radius:var(--radius);
+  padding:22px 24px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  box-shadow:var(--shadow-sm);
+  transition:transform .22s ease, box-shadow .22s ease;
+}
+.mastery:hover{transform:translateY(-3px);box-shadow:var(--shadow)}
+.mastery.red{border-top:3px solid var(--red)}
+.mastery.green{border-top:3px solid var(--green)}
+.mastery.amber{border-top:3px solid var(--amber)}
+.mastery h4{font-size:15px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:9px;line-height:1.6}
+.mastery.red h4{color:var(--red)}
+.mastery.green h4{color:var(--green)}
+.mastery.amber h4{color:var(--amber)}
+.mastery ul{display:flex;flex-direction:column;gap:6px}
+.mastery li{
+  font-size:13.8px;
+  color:var(--text-soft);
+  padding-inline-start:18px;
+  position:relative;
+  line-height:1.85;
+}
+.mastery li::before{content:"—";position:absolute;inset-inline-start:0;color:var(--muted);opacity:.6}
+
+.pipeline{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(200px,1fr));
+  gap:10px;
+  counter-reset:pipe;
+}
+.pipe-item{
+  counter-increment:pipe;
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:13px 16px;
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:var(--radius-sm);
+  font-size:13.6px;
+  font-weight:600;
+  color:var(--text-soft);
+  transition:border-color .2s ease, color .2s ease, transform .2s ease, box-shadow .2s ease;
+  box-shadow:var(--shadow-sm);
+  line-height:1.7;
+}
+.pipe-item::before{
+  content:counter(pipe);
+  font-family:var(--font-alt);
+  font-size:11px;
+  font-weight:800;
+  width:24px;height:24px;
+  border-radius:8px;
+  display:grid;place-items:center;
+  background:var(--brand-soft);
+  color:var(--brand);
+  flex:0 0 auto;
+}
+.pipe-item:hover{
+  border-color:var(--brand-ring);
+  color:var(--brand);
+  transform:translateY(-2px);
+  box-shadow:var(--shadow);
+}
+
+.goal{
+  position:relative;
+  overflow:hidden;
+  border-radius:22px;
+  padding:40px 36px;
+  background:linear-gradient(135deg,var(--surface) 0%,var(--surface-2) 100%);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  text-align:center;
+}
+.goal::before{
+  content:"";
+  position:absolute;
+  inset-inline:0;top:0;
+  height:4px;
+  background:linear-gradient(90deg,var(--brand),var(--accent));
+}
+.goal .goal-icon{
+  width:62px;height:62px;
+  margin:0 auto 20px;
+  border-radius:20px;
+  display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--brand),var(--brand-2));
+  font-size:28px;
+  box-shadow:0 16px 34px -14px var(--brand-ring);
+}
+.goal h3{
+  font-size:clamp(18px,2.6vw,25px);
+  font-weight:900;
+  line-height:1.75;
+  max-width:44ch;
+  margin:0 auto 14px;
+}
+.goal h3 mark{
+  background:linear-gradient(180deg,transparent 58%,var(--accent-soft) 58%);
+  color:var(--brand);
+  padding:0 4px;
+  border-radius:4px;
+}
+[data-theme="dark"] .goal h3 mark{
+  background:linear-gradient(180deg,transparent 58%,var(--brand-soft) 58%);
+}
+.goal p{color:var(--muted);font-size:15px;max-width:62ch;margin:0 auto;line-height:1.95}
+
+.footer{
+  position:relative;
+  z-index:1;
+  border-top:1px solid var(--border);
+  background:var(--surface);
+  padding:38px 24px;
+  text-align:center;
+}
+.footer-inner{max-width:1440px;margin:0 auto}
+.footer p{font-size:13.5px;color:var(--muted);line-height:2}
+.footer .f-brand{font-weight:800;color:var(--text);font-size:15px;margin-bottom:6px;line-height:1.7}
+.footer .f-note{margin-top:14px;font-size:12.5px;opacity:.8}
+
+.to-top{
+  position:fixed;
+  inset-inline-start:26px;
+  bottom:26px;
+  bottom:calc(26px + env(safe-area-inset-bottom,0px));
+  width:46px;height:46px;
+  border-radius:14px;
+  display:grid;place-items:center;
+  background:var(--brand);
+  color:#fff;
+  border:none;
+  cursor:pointer;
+  box-shadow:0 14px 30px -10px var(--brand-ring);
+  opacity:0;
+  visibility:hidden;
+  transform:translateY(14px) scale(.9);
+  transition:opacity .28s cubic-bezier(.4,0,.2,1), visibility .28s, transform .28s cubic-bezier(.4,0,.2,1), background .2s;
+  z-index:90;
+  touch-action:manipulation;
+}
+.to-top.show{opacity:1;visibility:visible;transform:translateY(0) scale(1)}
+.to-top:hover{background:var(--brand-2);transform:translateY(-3px) scale(1.04)}
+.to-top svg{width:20px;height:20px}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(8,15,28,.6);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .25s ease, visibility .25s;
+  z-index:109;
+}
+.overlay.show{opacity:1;visibility:visible}
+
+.reveal{
+  opacity:0;
+  transform:translateY(16px);
+  transition:opacity .55s cubic-bezier(.4,0,.2,1), transform .55s cubic-bezier(.4,0,.2,1);
+}
+.reveal.in{opacity:1;transform:none}
+
+/* ============================================================
+   Responsive
+   ============================================================ */
+@media (max-width:1080px){
+  .layout{
+    grid-template-columns:1fr;
+    gap:0;
+    padding:16px 18px 90px;
+  }
+
+  .sidebar{
+    position:fixed;
+    top:0;
+    right:0;
+    left:auto;
+    bottom:auto;
+    width:320px;
+    max-width:88vw;
+    height:100vh;
+    height:100dvh;
+    max-height:none;
+    background:var(--surface);
+    border-left:1px solid var(--border);
+    border-radius:0;
+    padding:20px 16px;
+    padding-top:calc(20px + env(safe-area-inset-top,0px));
+    padding-bottom:calc(20px + env(safe-area-inset-bottom,0px));
+    overflow-y:auto;
+    overscroll-behavior:contain;
+    -webkit-overflow-scrolling:touch;
+    z-index:110;
+    transform:translateX(100%);
+    visibility:hidden;
+    box-shadow:-24px 0 60px -28px rgba(0,0,0,.45);
+    -webkit-backface-visibility:hidden;
+    backface-visibility:hidden;
+    transition:transform .3s cubic-bezier(.4,0,.2,1), visibility 0s linear .3s;
+    pointer-events:auto;
+  }
+  .sidebar.open{
+    transform:translateX(0);
+    visibility:visible;
+    transition:transform .3s cubic-bezier(.4,0,.2,1), visibility 0s;
+  }
+
+  .toc{
+    border:none;
+    box-shadow:none;
+    padding:0;
+    background:transparent;
+    border-radius:0;
+  }
+  .toc-close{display:grid}
+
+  .menu-btn{display:grid}
+  .hero{padding:44px 18px 30px}
+  .chapter-banner{padding:28px 22px}
+  .card{padding:20px 18px}
+  .goal{padding:32px 22px}
+}
+
+@media (max-width:640px){
+  body{font-size:15.4px}
+
+  .topbar-inner{padding:0 14px;gap:10px;min-height:62px}
+  .brand{font-size:14.5px}
+  .brand-text small{display:none}
+  .brand-mark{width:34px;height:34px;font-size:12px}
+  .icon-btn{width:38px;height:38px}
+
+  .hero{padding:36px 16px 24px}
+  .hero h1{line-height:1.5}
+  .hero-ref{padding:9px 14px;font-size:12.8px}
+  .hero-stats{grid-template-columns:1fr 1fr;gap:10px}
+  .stat{padding:15px 15px}
+  .stat span{font-size:12px}
+
+  .layout{padding:12px 16px 90px}
+
+  .chapter-banner{padding:24px 18px;border-radius:18px}
+  .chapter-banner h2{font-size:19px}
+  .chapter-banner p{font-size:14.2px}
+
+  .section{margin-bottom:42px}
+  .section h2{font-size:21px}
+  .section-sub{font-size:14.4px}
+
+  .card{padding:18px 16px;border-radius:16px}
+  .card-head{gap:9px}
+  .card-head h3{font-size:16.4px;flex:1 1 100%}
+  .badge{font-size:11px;padding:4px 10px}
+
+  .block p{font-size:14.2px}
+  .list li{font-size:14px}
+  .callout{padding:14px 14px;gap:11px}
+  .callout .co-body{font-size:13.8px}
+
+  .flow{gap:6px;padding:13px 13px}
+  .flow .step{font-size:12px;padding:5px 10px}
+  .flow .arrow{font-size:12px}
+
+  table{font-size:13px;min-width:460px}
+  thead th{padding:12px 14px;font-size:11.8px}
+  tbody td{padding:11px 14px}
+
+  .mastery{padding:18px 18px}
+  .pipe-item{font-size:13px;padding:11px 13px}
+  .goal{padding:28px 18px;border-radius:18px}
+
+  .to-top{
+    inset-inline-start:auto;
+    inset-inline-end:16px;
+    bottom:16px;
+    bottom:calc(16px + env(safe-area-inset-bottom,0px));
+    width:42px;height:42px;
+  }
+}
+
+@media (max-width:380px){
+  .hero-stats{grid-template-columns:1fr}
+  .brand-text{font-size:13.5px}
+  .grid-2{grid-template-columns:1fr}
+}
+
+@media (hover:none){
+  .card:hover,.stat:hover,.mastery:hover,.pipe-item:hover,.chip:hover,.icon-btn:hover{transform:none}
+}
+
+@media (prefers-reduced-motion:reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{
+    animation-duration:.01ms !important;
+    animation-iteration-count:1 !important;
+    transition-duration:.01ms !important;
+  }
+  .reveal{opacity:1 !important;transform:none !important}
+}
+
+/* ============================================================
+   PRINT
+   ============================================================ */
+@media print{
+  @page{margin:14mm 12mm;size:A4}
+
+  .topbar,.sidebar,.to-top,.overlay,.menu-btn,.toc-close{display:none !important}
+
+  html,body{
+    background:#fff !important;
+    color:#000 !important;
+    font-size:9.8pt !important;
+    line-height:1.55 !important;
+    overflow:visible !important;
+    width:auto !important;
+    min-height:0 !important;
+  }
+  body::before{display:none !important}
+
+  .layout{
+    display:block !important;
+    padding:0 !important;
+    margin:0 !important;
+    gap:0 !important;
+    max-width:100% !important;
+    grid-template-columns:1fr !important;
+  }
+  .content{max-width:100% !important}
+
+  .hero{padding:0 0 8mm !important;max-width:100% !important}
+  .hero h1{font-size:19pt !important;line-height:1.35 !important;margin-bottom:4mm !important}
+  .hero p.lead{font-size:10pt !important;margin-bottom:4mm !important;line-height:1.55 !important}
+  .hero-badge,.hero-ref{font-size:8.5pt !important;margin-bottom:3mm !important;padding:2mm 4mm !important;box-shadow:none !important}
+  .hero-stats{display:grid !important;grid-template-columns:repeat(4,1fr) !important;gap:3mm !important;margin-top:4mm !important}
+  .stat{padding:3mm !important;border:1px solid #ccc !important;box-shadow:none !important;border-radius:3px !important}
+  .stat::after{display:none}
+  .stat b{font-size:13pt !important;line-height:1.2 !important}
+  .stat span{font-size:8pt !important}
+
+  .section{margin-bottom:5mm !important}
+  .section h2{font-size:14pt !important;margin:2mm 0 3mm !important;line-height:1.4 !important}
+  .section-sub{font-size:9.5pt !important;margin-bottom:3mm !important;line-height:1.55 !important}
+  .section-kicker{font-size:8.5pt !important}
+  .section-kicker::before{width:14px !important}
+
+  .chapter-banner{
+    background:#0d7377 !important;
+    color:#fff !important;
+    padding:5mm 6mm !important;
+    margin:0 0 4mm !important;
+    border-radius:4px !important;
+    box-shadow:none !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  #ch8 .chapter-banner,
+  #ch9 .chapter-banner{
+    break-before:page !important;
+    page-break-before:always !important;
+  }
+  .chapter-banner::before,
+  .chapter-banner::after{display:none !important}
+  .chapter-banner .ch-tag{
+    font-size:7.5pt !important;
+    padding:1mm 3mm !important;
+    margin-bottom:2mm !important;
+    background:rgba(255,255,255,.22) !important;
+    border-color:rgba(255,255,255,.4) !important;
+  }
+  .chapter-banner h2{font-size:13.5pt !important;margin-bottom:2mm !important;line-height:1.35 !important}
+  .chapter-banner p{font-size:9pt !important;line-height:1.5 !important;color:rgba(255,255,255,.95) !important}
+
+  .card{
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    box-shadow:none !important;
+    border:1px solid #cbd5e1 !important;
+    border-radius:4px !important;
+    padding:3.5mm 4mm !important;
+    margin-bottom:3mm !important;
+    transform:none !important;
+    opacity:1 !important;
+    transition:none !important;
+    background:#fff !important;
+  }
+  .card:hover{transform:none !important;box-shadow:none !important}
+
+  .card-head{
+    gap:2mm !important;
+    margin-bottom:2.5mm !important;
+    padding-bottom:2mm !important;
+    border-bottom:1px dashed #cbd5e1 !important;
+  }
+  .card-head h3{font-size:10.5pt !important;line-height:1.4 !important;flex:1 1 100% !important}
+  .num{font-size:8pt !important;padding:1mm 2.5mm !important;border-radius:2px !important}
+  .badge{font-size:7.5pt !important;padding:.8mm 2.5mm !important;border-radius:99px !important}
+
+  .block{margin-bottom:2.5mm !important}
+  .block h4{font-size:9.5pt !important;margin-bottom:1.5mm !important;line-height:1.4 !important}
+  .block h4::before{height:10px !important;width:3px !important}
+  .block p{font-size:9pt !important;line-height:1.5 !important}
+
+  .list{gap:.5mm !important}
+  .list li{
+    font-size:9pt !important;
+    padding-inline-start:4.5mm !important;
+    line-height:1.5 !important;
+  }
+  .list li::before{
+    top:1.7mm !important;
+    width:1.4mm !important;
+    height:1.4mm !important;
+    inset-inline-start:1.2mm !important;
+  }
+
+  .grid-2{grid-template-columns:1fr 1fr !important;gap:.5mm 4mm !important}
+
+  .chips{gap:1mm !important}
+  .chip{
+    font-size:7.8pt !important;
+    padding:.8mm 2.2mm !important;
+    border-radius:2px !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    border:1px solid #cbd5e1 !important;
+    background:#f8fafc !important;
+    transform:none !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .chip:hover{transform:none !important;background:#f8fafc !important;color:#334155 !important}
+
+  .callout{
+    padding:2.5mm 3mm !important;
+    margin:2.5mm 0 !important;
+    gap:2.5mm !important;
+    border:1px solid #cbd5e1 !important;
+    border-inline-start:3px solid #0d7377 !important;
+    border-radius:3px !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    background:#f8fafc !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .callout.warn{
+    background:#fef4e6 !important;
+    border-inline-start-color:#d97706 !important;
+  }
+  .callout.danger{
+    background:#fdecec !important;
+    border-inline-start-color:#dc2626 !important;
+  }
+  .callout.success{
+    background:#e7f7f1 !important;
+    border-inline-start-color:#059669 !important;
+  }
+  .callout .co-icon{font-size:11pt !important}
+  .callout .co-body{font-size:8.8pt !important;line-height:1.5 !important}
+
+  .flow{
+    padding:2.5mm 3mm !important;
+    margin:2.5mm 0 !important;
+    gap:1.2mm !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    background:#f8fafc !important;
+    border:1px solid #e2e8f0 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .flow .step{
+    font-size:8pt !important;
+    padding:.8mm 2mm !important;
+    border-radius:2px !important;
+    line-height:1.4 !important;
+    background:#fff !important;
+    border:1px solid #cbd5e1 !important;
+  }
+  .flow .step.hi{
+    background:#e6f4f4 !important;
+    color:#0a5c60 !important;
+    border-color:#0d7377 !important;
+  }
+  .flow .arrow{font-size:8pt !important}
+
+  .table-wrap{
+    border:1px solid #cbd5e1 !important;
+    box-shadow:none !important;
+    border-radius:3px !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    margin-bottom:3mm !important;
+    overflow:visible !important;
+    background:#fff !important;
+  }
+  table{font-size:8.5pt !important;min-width:0 !important;width:100% !important}
+  thead th{
+    font-size:8pt !important;
+    padding:2mm 2.5mm !important;
+    background:#f1f5f9 !important;
+    border-bottom:1px solid #cbd5e1 !important;
+    color:#334155 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  tbody td{padding:1.8mm 2.5mm !important;font-size:8.5pt !important;line-height:1.45 !important}
+  tbody tr{background:#fff !important}
+
+  .mastery-grid{grid-template-columns:1fr !important;gap:3mm !important}
+  .mastery{
+    padding:3mm 4mm !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    box-shadow:none !important;
+    border:1px solid #cbd5e1 !important;
+    border-radius:3px !important;
+    border-top-width:3px !important;
+    transform:none !important;
+    background:#fff !important;
+  }
+  .mastery.red{border-top-color:#dc2626 !important}
+  .mastery.green{border-top-color:#059669 !important}
+  .mastery.amber{border-top-color:#d97706 !important}
+  .mastery h4{font-size:9.5pt !important;margin-bottom:1.5mm !important;line-height:1.4 !important}
+  .mastery li{
+    font-size:8.8pt !important;
+    line-height:1.5 !important;
+    padding-inline-start:3.5mm !important;
+  }
+
+  .pipeline{grid-template-columns:repeat(3,1fr) !important;gap:1.5mm !important}
+  .pipe-item{
+    font-size:8.5pt !important;
+    padding:1.8mm 2.5mm !important;
+    gap:2mm !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    box-shadow:none !important;
+    border:1px solid #cbd5e1 !important;
+    border-radius:3px !important;
+    background:#fff !important;
+    transform:none !important;
+    line-height:1.4 !important;
+  }
+  .pipe-item::before{
+    width:4mm !important;
+    height:4mm !important;
+    font-size:7pt !important;
+    border-radius:2px !important;
+    background:#e6f4f4 !important;
+    color:#0a5c60 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  .goal{
+    padding:5mm 5mm !important;
+    break-inside:avoid !important;
+    page-break-inside:avoid !important;
+    box-shadow:none !important;
+    border:1px solid #cbd5e1 !important;
+    border-radius:3px !important;
+    background:#fff !important;
+  }
+  .goal::before{height:2px !important}
+  .goal .goal-icon{
+    width:9mm !important;
+    height:9mm !important;
+    font-size:12pt !important;
+    margin-bottom:2.5mm !important;
+    border-radius:2mm !important;
+    box-shadow:none !important;
+    background:#0d7377 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+  .goal h3{font-size:11.5pt !important;line-height:1.45 !important;margin-bottom:2.5mm !important}
+  .goal p{font-size:9pt !important;line-height:1.5 !important}
+  .goal h3 mark{
+    background:#fef3e2 !important;
+    color:#0a5c60 !important;
+    -webkit-print-color-adjust:exact !important;
+    print-color-adjust:exact !important;
+  }
+
+  .footer{
+    padding:4mm !important;
+    border-top:1px solid #cbd5e1 !important;
+    background:#fff !important;
+    margin-top:4mm !important;
+  }
+  .footer p{font-size:8.5pt !important;line-height:1.5 !important}
+  .footer .f-brand{font-size:10pt !important;color:#000 !important}
+
+  .reveal{opacity:1 !important;transform:none !important;transition:none !important}
+
+  a{color:#000 !important;text-decoration:none !important}
+
+  h1,h2,h3,h4{break-after:avoid !important;page-break-after:avoid !important}
+  p{orphans:3 !important;widows:3 !important}
+}
+
+
+/* ============================================================
+   Phase 3–5 generated-content helpers (same visual system)
+   ============================================================ */
+.code-panel{margin:14px 0 18px;border:1px solid var(--border);border-radius:var(--radius-sm);background:var(--surface-2);overflow:auto;box-shadow:var(--shadow-sm);direction:ltr;text-align:left}
+.code-panel pre{margin:0;padding:18px 20px;font:600 12.8px/1.9 ui-monospace,SFMono-Regular,Menlo,Consolas,"Liberation Mono",monospace;color:var(--text-soft);white-space:pre-wrap;word-break:break-word}
+.inline-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:.92em;background:var(--surface-2);border:1px solid var(--border);border-radius:6px;padding:1px 6px;color:var(--brand)}
+.block .mini-title{font-size:13px;font-weight:800;color:var(--text);margin:13px 0 7px;line-height:1.7}
+.block .subtle{color:var(--muted)}
+.card.plain-card .card-head{margin-bottom:12px}
+.card .block + .table-wrap{margin-top:8px}
+.section .chapter-banner + .card{margin-top:0}
+.quote-plain{font-size:14.6px;color:var(--text-soft);line-height:1.95}
+.flow.vertical-flow{display:grid;grid-template-columns:1fr;justify-items:stretch}
+.flow.vertical-flow .arrow{text-align:center;transform:rotate(-90deg);padding:1px 0}
+.phase-map{display:grid;gap:10px;margin:14px 0}
+.phase-map .step{padding:12px 15px;border-radius:var(--radius-sm);background:var(--surface);border:1px solid var(--border);box-shadow:var(--shadow-sm);font-size:13.5px;font-weight:700;color:var(--text-soft)}
+.phase-map .step strong{color:var(--brand)}
+@media(max-width:640px){.code-panel pre{font-size:11.8px;padding:15px 14px}.card-head .badge{white-space:normal}}
+</style>
+<style id="studyV1Style">
+/* ============================================================
+   Study Edition v1 — shared learning features
+   ============================================================ */
+.study-search{margin:0 0 16px;position:relative}
+.study-search-box{position:relative;display:flex;align-items:center}
+.study-search-box svg{position:absolute;inset-inline-start:12px;width:17px;height:17px;color:var(--muted);pointer-events:none}
+.study-search-input{width:100%;height:42px;border:1px solid var(--border);border-radius:11px;background:var(--surface-2);color:var(--text);font:600 13px/1.6 var(--font);padding:8px 38px 8px 12px;outline:none;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease}
+.study-search-input:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-ring);background:var(--surface)}
+.study-search-input::placeholder{color:var(--muted);font-weight:500}
+.study-search-results{display:none;margin-top:8px;border:1px solid var(--border);border-radius:11px;background:var(--surface);overflow:hidden;box-shadow:var(--shadow)}
+.study-search-results.show{display:block}
+.study-search-result{display:block;padding:9px 11px;border-bottom:1px solid var(--border-soft);transition:background .16s ease;color:var(--text-soft)}
+.study-search-result:last-child{border-bottom:none}
+.study-search-result:hover{background:var(--brand-soft);color:var(--brand)}
+.study-search-result b{display:block;font-size:12.8px;line-height:1.6;color:inherit}
+.study-search-result small{display:block;margin-top:2px;color:var(--muted);font-size:10.8px;line-height:1.5}
+.study-search-empty{padding:11px;text-align:center;color:var(--muted);font-size:12px}
+
+.topic-done-btn{margin-inline-start:auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:32px;padding:5px 11px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);font:700 11.5px/1.4 var(--font);cursor:pointer;transition:all .18s ease;white-space:nowrap;touch-action:manipulation}
+.topic-done-btn:hover{border-color:var(--green);color:var(--green);background:var(--green-soft)}
+.topic-done-btn.done{background:var(--green-soft);color:var(--green);border-color:rgba(5,150,105,.35)}
+[data-theme="dark"] .topic-done-btn.done{border-color:rgba(52,211,153,.35)}
+.card.topic-complete{border-color:rgba(5,150,105,.28)}
+.card.topic-complete::after{content:"✓";position:absolute;inset-inline-end:14px;top:12px;width:22px;height:22px;border-radius:50%;display:grid;place-items:center;background:var(--green-soft);color:var(--green);font-size:11px;font-weight:900;opacity:.8}
+.card[id^="c"]{position:relative}
+
+.study-progress-stat b{font-size:clamp(22px,3.5vw,28px)}
+.study-progress-stat span span{font-weight:800;color:var(--text-soft)}
+
+.phase-nav{display:flex;align-items:stretch;justify-content:space-between;gap:10px;margin-top:24px;flex-wrap:wrap}
+.phase-nav a,.phase-nav .disabled{display:flex;align-items:center;gap:8px;min-height:44px;padding:9px 14px;border-radius:12px;border:1px solid var(--border);background:var(--surface);box-shadow:var(--shadow-sm);font-size:12.5px;font-weight:800;color:var(--text-soft);transition:all .18s ease;line-height:1.5}
+.phase-nav a:hover{border-color:var(--brand-ring);background:var(--brand-soft);color:var(--brand);transform:translateY(-1px)}
+.phase-nav .home-link{margin-inline:auto}
+.phase-nav .disabled{opacity:.38;cursor:not-allowed;box-shadow:none}
+.phase-nav svg{width:16px;height:16px;flex:0 0 auto}
+
+.study-version-pill{display:inline-flex;align-items:center;gap:6px;font-size:10.5px;font-weight:800;color:var(--brand);background:var(--brand-soft);border:1px solid var(--brand-ring);padding:3px 9px;border-radius:99px;margin-inline-start:7px}
+
+@media(max-width:760px){
+  .topic-done-btn{width:100%;margin-inline-start:0;margin-top:3px}
+  .phase-nav{display:grid;grid-template-columns:1fr 1fr}
+  .phase-nav .home-link{grid-column:1/-1;grid-row:1;margin:0;justify-content:center}
+  .phase-nav a,.phase-nav .disabled{justify-content:center;text-align:center}
+}
+@media print{
+  .study-search,.topic-done-btn,.phase-nav,.study-progress-stat,.study-version-pill{display:none!important}
+  .card.topic-complete{border-color:var(--border)!important}
+  .card.topic-complete::after{display:none!important}
+}
+
+/* ============================================================
+   Study v2 — Learning controls
+   ============================================================ */
+.study-version-pill{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-ring);padding:2px 7px;border-radius:99px;font-size:9.5px;font-weight:800;margin-inline-start:6px;vertical-align:middle}
+.study-tools{margin:0 0 14px;padding:12px;border:1px solid var(--border);background:var(--surface-2);border-radius:12px}
+.study-tools-title{font-size:11px;font-weight:800;color:var(--muted);margin-bottom:9px}
+.study-tools-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.study-tool-btn{border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:9px;padding:8px 7px;font:700 11.5px/1.5 var(--font);cursor:pointer;transition:.17s ease;min-width:0}
+.study-tool-btn:hover{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}
+.study-tool-btn.danger:hover{border-color:var(--red);color:var(--red);background:var(--red-soft)}
+.topic-collapse-btn{width:32px;height:32px;border-radius:9px;border:1px solid var(--border);background:var(--surface-2);color:var(--muted);display:grid;place-items:center;cursor:pointer;transition:.18s ease;flex:0 0 auto}
+.topic-collapse-btn:hover{color:var(--brand);border-color:var(--brand);background:var(--brand-soft)}
+.topic-collapse-btn svg{width:16px;height:16px;transition:transform .2s ease}
+.card.topic-collapsed .topic-collapse-btn svg{transform:rotate(180deg)}
+.card.topic-collapsed > :not(.card-head){display:none!important}
+.topic-nav{margin-top:18px;padding-top:14px;border-top:1px dashed var(--border);display:grid;grid-template-columns:1fr auto 1fr;gap:8px;align-items:center}
+.topic-nav a{display:flex;flex-direction:column;gap:2px;padding:9px 11px;border:1px solid var(--border);border-radius:10px;background:var(--surface-2);color:var(--text-soft);font-size:11.5px;line-height:1.55;transition:.17s ease;min-width:0}
+.topic-nav a:hover{color:var(--brand);border-color:var(--brand);background:var(--brand-soft)}
+.topic-nav .next{text-align:left;align-items:flex-end}
+.topic-nav small{color:var(--muted);font-size:9.5px}.topic-nav .nav-spacer{width:1px;height:28px;background:var(--border)}
+.chapter-progress{margin-top:18px;max-width:560px}.chapter-progress-head{display:flex;justify-content:space-between;gap:12px;font-size:11.5px;color:rgba(255,255,255,.86);margin-bottom:7px}.chapter-progress-head b{font-family:var(--font-alt);color:#fff}.chapter-progress-track{height:7px;background:rgba(255,255,255,.17);border-radius:99px;overflow:hidden}.chapter-progress-fill{height:100%;width:0;background:linear-gradient(90deg,#fff,#fde68a);border-radius:99px;transition:width .35s ease}
+.chapter-checklist{margin-top:22px;padding:20px 22px;border:1px solid var(--border);border-radius:var(--radius);background:linear-gradient(135deg,var(--surface),var(--surface-2));box-shadow:var(--shadow-sm)}
+.chapter-checklist-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:13px}.chapter-checklist h3{font-size:16px;font-weight:900}.chapter-checklist .check-pct{font-family:var(--font-alt);font-weight:800;color:var(--brand)}
+.chapter-checklist-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:8px}
+.chapter-check-item{display:flex;align-items:flex-start;gap:9px;border:1px solid var(--border);background:var(--surface);border-radius:10px;padding:9px 10px;cursor:pointer;color:var(--text-soft);font:600 12.2px/1.65 var(--font);text-align:right;transition:.17s ease}
+.chapter-check-item:hover{border-color:var(--brand-ring);background:var(--brand-soft)}
+.chapter-check-item .check-box{width:19px;height:19px;border-radius:6px;border:1.5px solid var(--border);display:grid;place-items:center;flex:0 0 auto;margin-top:1px;color:transparent;font-size:12px}
+.chapter-check-item.done{color:var(--green)}.chapter-check-item.done .check-box{background:var(--green-soft);border-color:var(--green);color:var(--green)}
+.glossary-section{scroll-margin-top:96px}.glossary-tools{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap}.glossary-search{flex:1 1 280px;position:relative}.glossary-search input{width:100%;height:44px;border:1px solid var(--border);border-radius:11px;background:var(--surface);color:var(--text);padding:9px 14px;font:600 13px/1.6 var(--font);outline:none}.glossary-search input:focus{border-color:var(--brand);box-shadow:0 0 0 3px var(--brand-ring)}
+.glossary-count{font-size:12px;color:var(--muted);font-weight:700}.glossary-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}.glossary-item{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 15px;box-shadow:var(--shadow-sm)}.glossary-term{font-family:var(--font-alt);font-size:12.5px;font-weight:800;color:var(--brand);direction:ltr;text-align:left}.glossary-def{margin-top:6px;font-size:12.7px;line-height:1.85;color:var(--text-soft)}
+.focus-btn.active{background:var(--brand-soft);color:var(--brand);border-color:var(--brand)}
+body.study-focus .hero,body.study-focus .sidebar,body.study-focus .footer,body.study-focus .phase-nav,body.study-focus .to-top{display:none!important}
+body.study-focus .layout{grid-template-columns:minmax(0,920px);justify-content:center;max-width:1000px;padding-top:30px}
+body.study-focus .content>.section{display:none!important}body.study-focus .content>.section.focus-section{display:block!important}
+body.study-focus .focus-section>.card,body.study-focus .focus-section>.chapter-checklist,body.study-focus .focus-section>.chapter-banner{display:none!important}
+body.study-focus .focus-section>.card.focus-target{display:block!important}
+body.study-focus .focus-section>.card.focus-target.topic-collapsed>:not(.card-head){display:block!important}
+.resume-toast{position:fixed;inset-inline-start:50%;transform:translateX(-50%);bottom:84px;z-index:300;background:var(--text);color:var(--surface);padding:9px 14px;border-radius:10px;font-size:11.5px;font-weight:700;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transition:opacity .2s ease}.resume-toast.show{opacity:1}
+.mobile-study-bar{display:none;position:fixed;inset-inline:10px;bottom:10px;bottom:calc(10px + env(safe-area-inset-bottom,0px));z-index:180;background:var(--topbar-bg);backdrop-filter:blur(15px);-webkit-backdrop-filter:blur(15px);border:1px solid var(--border);border-radius:15px;padding:7px;box-shadow:var(--shadow-lg);grid-template-columns:1fr auto 1fr;gap:7px;align-items:center}
+.mobile-study-bar button{min-height:44px;border:1px solid var(--border);background:var(--surface);color:var(--text-soft);border-radius:10px;font:700 11.5px/1.4 var(--font);padding:7px 8px;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.mobile-study-bar button.primary{background:var(--brand);color:#fff;border-color:var(--brand);min-width:96px}.mobile-study-bar button.primary.done{background:var(--green);border-color:var(--green)}.mobile-study-bar button:disabled{opacity:.4;cursor:not-allowed}
+.shortcut-hint{font-size:10.5px;color:var(--muted);margin-top:9px;line-height:1.7}.kbd{display:inline-block;border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;background:var(--surface);padding:0 5px;font-family:var(--font-alt);font-size:9.5px;color:var(--text-soft)}
+@media(max-width:900px){.mobile-study-bar{display:grid}.footer{padding-bottom:92px}.topic-nav{display:none}.study-tools-grid{grid-template-columns:1fr 1fr}.chapter-checklist-list{grid-template-columns:1fr}.glossary-grid{grid-template-columns:1fr}}
+@media print{.study-tools,.topic-collapse-btn,.topic-nav,.chapter-progress,.chapter-checklist,.glossary-tools,.focus-btn,.mobile-study-bar,.resume-toast{display:none!important}.card.topic-collapsed>:not(.card-head){display:block!important}.glossary-grid{display:block}.glossary-item{break-inside:avoid;margin-bottom:8px}}
+
+/* Study v2.1 — calm reading + usability */
+body::before{opacity:.14}.hero{padding-bottom:26px}.hero-badge .dot{animation:none}
+.stat,.card,.mastery,.pipe-item,.table-wrap,.goal{box-shadow:none!important}.stat:hover,.card:hover,.mastery:hover,.pipe-item:hover{transform:none!important;box-shadow:none!important}
+.card{border-radius:14px;border-color:var(--border-soft);padding:26px 28px;margin-bottom:22px}.card:hover{border-color:var(--border)}
+.chapter-banner{border-radius:16px;box-shadow:none;background:linear-gradient(135deg,#0d7377 0%,#0b6266 100%)}.chapter-banner::before,.chapter-banner::after{display:none}[data-theme="dark"] .chapter-banner{background:linear-gradient(135deg,#123f42,#102f32)}
+.reveal,.reveal.in{opacity:1!important;transform:none!important;transition:none!important}.content{max-width:980px;width:100%}.section{margin-bottom:54px}.block p,.list{max-width:82ch}.callout{box-shadow:none}.chip{background:transparent}.hero-stats .stat{border-color:var(--border-soft)}
+.study-tools{background:var(--surface);border-color:var(--border-soft)}.study-tool-btn{box-shadow:none}.study-tool-btn:hover{transform:none}
+.toc-list a{display:flex;align-items:flex-start;gap:8px}.toc-list a .toc-topic-text{flex:1;min-width:0}.topic-status{width:18px;height:18px;flex:0 0 18px;border-radius:50%;display:grid;place-items:center;font-family:var(--font-alt);font-size:9px;font-weight:900;margin-top:2px;border:1px solid var(--border);color:var(--muted);background:var(--surface)}.toc-list a.is-current .topic-status{border-color:var(--brand);color:var(--brand);background:var(--brand-soft)}.toc-list a.is-done .topic-status{border-color:rgba(5,150,105,.28);color:var(--green);background:var(--green-soft)}
+.chapter-overview{display:grid;grid-template-columns:minmax(0,1fr) repeat(3,minmax(100px,140px));gap:12px;align-items:stretch;margin:-8px 0 24px}.chapter-overview-main,.chapter-overview-stat{border:1px solid var(--border-soft);background:var(--surface);border-radius:12px;padding:15px 17px}.chapter-overview-main h3{font-size:13px;font-weight:800;color:var(--brand);margin-bottom:5px}.chapter-overview-main p{font-size:13px;line-height:1.8;color:var(--text-soft);margin:0}.chapter-overview-stat{display:flex;flex-direction:column;justify-content:center;text-align:center}.chapter-overview-stat b{font-family:var(--font-alt);font-size:19px;color:var(--text);line-height:1.2}.chapter-overview-stat span{font-size:10.5px;color:var(--muted);margin-top:5px;font-weight:700}
+.study-tool-btn.active{background:var(--brand-soft);color:var(--brand);border-color:var(--brand)}.study-filter-hidden{display:none!important}.chapter-all-done-note{display:none;border:1px dashed var(--border);border-radius:12px;padding:14px 16px;color:var(--muted);font-size:12.5px;background:var(--surface-2);margin:0 0 20px;text-align:center}.chapter-all-done-note.show{display:block}
+.glossary-inline{color:inherit;text-decoration:underline dotted;text-decoration-color:rgba(13,115,119,.4);text-underline-offset:3px;cursor:help;border-radius:3px}.glossary-inline:hover,.glossary-inline:focus{color:var(--brand);outline:none;background:var(--brand-soft)}.glossary-popover{position:fixed;z-index:260;width:min(330px,calc(100vw - 28px));background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:13px 14px;box-shadow:var(--shadow-lg);opacity:0;visibility:hidden;transform:translateY(5px);transition:opacity .14s ease,transform .14s ease,visibility .14s;pointer-events:none}.glossary-popover.show{opacity:1;visibility:visible;transform:none}.glossary-popover b{display:block;color:var(--brand);font-family:var(--font-alt);font-size:12.5px;margin-bottom:5px;direction:ltr;text-align:left}.glossary-popover p{font-size:12.5px;line-height:1.75;color:var(--text-soft);margin:0}
+.toc-accordion-btn{display:none;position:absolute;inset-inline-end:4px;top:6px;width:30px;height:30px;border:0;background:transparent;color:var(--muted);border-radius:8px;cursor:pointer;place-items:center}.toc-accordion-btn svg{width:15px;height:15px;transition:transform .18s}.toc-group.mobile-open .toc-accordion-btn svg{transform:rotate(180deg)}.mobile-toc-progress{display:none;font-size:11px;color:var(--muted);font-weight:700;padding:8px 4px 12px;border-bottom:1px solid var(--border-soft);margin-bottom:12px}
+@media(max-width:1080px){.sidebar{padding-top:calc(10px + env(safe-area-inset-top,0px))}.toc-title{position:sticky;top:-10px;z-index:3;background:var(--surface);margin:-10px -2px 6px;padding:14px 4px 10px;border-bottom:1px solid var(--border-soft)}.mobile-toc-progress{display:block}.toc-group{position:relative;margin-bottom:8px}.toc-group.has-topic-list>.toc-label{padding-inline-end:40px}.toc-accordion-btn{display:grid}.toc-group.has-topic-list:not(.mobile-open)>.toc-list{display:none}.toc-list{margin-top:3px}.chapter-overview{grid-template-columns:1fr 1fr 1fr}.chapter-overview-main{grid-column:1/-1}}
+@media(max-width:640px){.card{padding:20px 17px;border-radius:12px}.chapter-banner{padding:24px 19px}.chapter-overview{grid-template-columns:repeat(3,1fr);gap:7px}.chapter-overview-main{padding:13px 14px}.chapter-overview-stat{padding:11px 7px}.chapter-overview-stat b{font-size:16px}.chapter-overview-stat span{font-size:9.5px}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+</style></head>
+<body>
+<header class="topbar">
+<div class="topbar-inner">
+<button aria-controls="sidebar" aria-expanded="false" aria-label="فتح القائمة" class="icon-btn menu-btn" id="menuBtn" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18"></path></svg></button>
+<div class="brand"><div aria-hidden="true" class="brand-mark">SAD</div><div class="brand-text">تحليل وتصميم النظم<small>Phase 3 — Design</small><span class="study-version-pill">Study v2.1</span></div></div>
+<div class="topbar-spacer"></div>
+<div class="topbar-actions">
+<button aria-label="طباعة أو حفظ PDF" class="icon-btn" id="printBtn" title="طباعة / حفظ PDF" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"></path></svg></button>
+<button aria-label="تبديل الوضع الليلي" class="icon-btn" id="themeBtn" title="الوضع الليلي / النهاري" type="button"><svg aria-hidden="true" fill="none" id="iconMoon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><svg aria-hidden="true" fill="none" id="iconSun" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" style="display:none" viewbox="0 0 24 24"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg></button>
+</div>
+</div>
+<div aria-hidden="true" class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+</header>
+<section class="hero">
+<div class="hero-badge"><span aria-hidden="true" class="dot"></span> المرحلة الثالثة من خمس مراحل</div>
+<h1><span class="grad">Phase 3 — التصميم</span><br/>كيف سنجعل النظام يحقق المتطلبات؟</h1>
+<p class="lead">بعد أن فهمنا في Phase 2 ما الذي يجب أن يفعله النظام، ننتقل الآن من WHAT إلى HOW: نصمم واجهة المستخدم، بنية البيانات، والبنية التقنية العامة قبل التنفيذ.</p>
+<div class="hero-ref">📘 <span>المرجع: <strong>Systems Analysis &amp; Design, 13th Edition — Scott Tilley</strong></span></div>
+<div class="hero-stats">
+<div class="stat"><b>3</b><span>فصول في المرحلة</span></div>
+<div class="stat"><b>27</b><span>موضوعًا أساسيًا</span></div>
+<div class="stat"><b>24+</b><span>أداة وتقنية</span></div>
+<div class="stat"><b>30</b><span>مخرجًا عمليًا</span></div>
+<div class="stat study-progress-stat"><b id="studyProgressText">0%</b><span><span id="studyProgressCount">0 / 0</span> موضوعًا مكتملًا</span></div></div>
+<div aria-label="التنقل بين المراحل" class="phase-nav"><a href="phase 2.html">← Phase 2 — التحليل</a><a class="home-link" href="index.html">⌂ فهرس المراحل الخمس</a><a href="phase 4.html">Phase 4 — التنفيذ →</a></div></section><div class="layout"><aside aria-label="فهرس المرحلة" class="sidebar" id="sidebar"><nav class="toc"><div class="toc-title"><span>فهرس المرحلة</span><button aria-label="إغلاق الفهرس" class="toc-close" id="tocClose" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12"></path></svg></button></div><div class="study-search" role="search">
+<div class="study-search-box">
+<svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="2" viewbox="0 0 24 24"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+<input aria-label="البحث في محتوى المرحلة" autocomplete="off" class="study-search-input" id="studySearchInput" placeholder="ابحث في المرحلة..." type="search"/>
+</div>
+<div aria-live="polite" class="study-search-results" id="studySearchResults"></div>
+</div><div class="toc-group"><a class="toc-label" href="#intro"><span class="toc-num">0</span> المقدمة والصورة الكبيرة</a></div><div class="toc-group"><a class="toc-label" href="#ch7"><span class="toc-num">7</span> User Interface Design</a><div class="toc-list"><a href="#c7-1">7.1 User Interfaces</a><a href="#c7-2">7.2 Human–Computer Interaction — HCI</a><a href="#c7-3">7.3 Seven Habits of Successful Interface Designers</a><a href="#c7-4">7.4 Guidelines for User Interface Design</a><a href="#c7-5">7.5 Source Document and Form Design</a><a href="#c7-6">7.6 Printed Output</a><a href="#c7-7">7.7 Technology Issues</a><a href="#c7-8">7.8 Control and Security Issues</a><a href="#c7-9">7.9 Emerging Trends</a></div></div><div class="toc-group"><a class="toc-label" href="#ch8"><span class="toc-num">8</span> Data Design</a><div class="toc-list"><a href="#c8-1">8.1 Data Design Concepts</a><a href="#c8-2">8.2 DBMS Components</a><a href="#c8-3">8.3 Web-Based Design</a><a href="#c8-4">8.4 Data Design Terms</a><a href="#c8-5">8.5 Entity-Relationship Diagrams — ERD</a><a href="#c8-6">8.6 Data Normalization</a><a href="#c8-7">8.7 Codes</a><a href="#c8-8">8.8 Data Storage and Access</a><a href="#c8-9">8.9 Data Control</a></div></div><div class="toc-group"><a class="toc-label" href="#ch9"><span class="toc-num">9</span> System Architecture</a><div class="toc-list"><a href="#c9-1">9.1 Architecture Checklist</a><a href="#c9-2">9.2 Evolution of System Architecture</a><a href="#c9-3">9.3 Client/Server Architecture</a><a href="#c9-4">9.4 Impact of the Internet</a><a href="#c9-5">9.5 E-Commerce Architecture</a><a href="#c9-6">9.6 Processing Methods</a><a href="#c9-7">9.7 Network Models</a><a href="#c9-8">9.8 Network Devices</a><a href="#c9-9">9.9 Wireless Networks</a></div></div><a class="toc-label" href="#tools"><span class="toc-num">★</span> خريطة الأدوات</a><a class="toc-label" href="#mastery"><span class="toc-num">★</span> مستويات الإتقان</a><a class="toc-label" href="#connections"><span class="toc-num">★</span> ترابط الفصول</a><a class="toc-label" href="#example"><span class="toc-num">★</span> مثال تطبيقي</a><a class="toc-label" href="#compare"><span class="toc-num">★</span> مقارنة المراحل</a><a class="toc-label" href="#outputs"><span class="toc-num">★</span> المخرجات الفعلية</a><a class="toc-label" href="#roadmap"><span class="toc-num">★</span> الخريطة المختصرة</a><a class="toc-label" href="#method"><span class="toc-num">★</span> طريقة الدراسة</a><a class="toc-label" href="#goal"><span class="toc-num">★</span> الهدف النهائي</a></nav></aside><main class="content"><section class="section" id="intro"><div class="section-kicker">نظرة عامة</div><h2>الصورة الكبيرة للمرحلة</h2><div class="callout success"><span aria-hidden="true" class="co-icon">✓</span><div class="co-body"><strong>لا يتم الانتقال إلى Phase 4: Implementation إلا بعد الموافقة الصريحة.</strong></div></div><div class="block"><p>Phase 3 تبدأ بعد الانتهاء من:</p><ul class="list"><li><strong>Phase 1 — Planning</strong></li><li><strong>Phase 2 — Analysis</strong></li></ul><p>في مرحلة <strong>Analysis</strong> كان السؤال الأساسي:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>WHAT? — ماذا يجب أن يفعل النظام؟</strong></p></div></div><p>أما الآن في <strong>Design</strong> فيصبح السؤال:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>HOW? — كيف سنجعل النظام يحقق هذه المتطلبات؟</strong></p></div></div><p>الكتاب يقسم Phase 3 إلى ثلاثة Chapters:</p><div class="table-wrap"><table><thead><tr><th>Chapter</th><th>الموضوع</th></tr></thead><tbody><tr><td><strong>Chapter 7</strong></td><td>User Interface Design</td></tr><tr><td><strong>Chapter 8</strong></td><td>Data Design</td></tr><tr><td><strong>Chapter 9</strong></td><td>System Architecture</td></tr></tbody></table></div><p>الهدف العام للمرحلة هو الانتقال من المتطلبات والنماذج المنطقية إلى تصميم يوضح:</p><ul class="list"><li>كيف سيتعامل المستخدم مع النظام.</li><li>كيف ستُنظَّم وتُدار البيانات.</li><li>كيف ستكون البنية التقنية العامة للنظام.</li></ul></div><article class="card"><div class="card-head"><span class="num">★</span><h3>0. الصورة الكبيرة للمرحلة الثالثة</h3></div><div class="block"><p>بعد Phase 2 كان عندنا مثلًا:</p><div class="flow"><span class="step hi"><strong>Requirements</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Use Cases</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>DFDs</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Business Rules</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Object Models</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>UML Models</strong></span></div><p>لكنها ما زالت تصف النظام بدرجة كبيرة على المستوى المنطقي.</p><p>في Phase 3 نأخذ هذه المعلومات ونبدأ اتخاذ قرارات التصميم.</p><p>مثال:</p><p>لدينا Requirement:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>يستطيع الموظف تسجيل عملية بيع.</p></div></div><p>في Analysis نسأل:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>ماذا يحدث أثناء البيع؟</p></div></div><p>أما Design فنبدأ نسأل:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كيف ستكون شاشة البيع؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>ما الحقول التي ستظهر؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كيف سيُدخل المستخدم المنتج؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كيف سنمنع إدخال بيانات خاطئة؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>أين ستُخزن بيانات العملية؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>ما الجداول والمفاتيح؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>هل النظام Client/Server؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>هل يعمل عبر Web؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>أين سيكون Server؟</p></div></div><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كيف ستتصل المكونات ببعضها؟</p></div></div><p>وهنا تبدأ فكرة النظام تتحول إلى <strong>Blueprint أكثر واقعية يمكن للمطورين تنفيذها لاحقًا</strong>.</p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>النتيجة النهائية المطلوبة من Phase 3</h3></div><div class="block"><p>بعد إتقان المرحلة يجب أن تستطيع أخذ Analysis الذي أنجزته وتحويله إلى:</p><div class="flow"><span class="step hi"><strong>User Interface Design</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Input Design</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Output / Report Design</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Validation &amp; UI Controls</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Database/Data Design</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>ERD</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Primary / Foreign Keys</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Normalized Tables</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Data Storage &amp; Control</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>System Architecture</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Client/Server Structure</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Processing Model</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Network Structure</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Security / Scalability Considerations</strong></span></div><p>وفي النهاية يكون عندك:</p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>System Design Specification</h3></div><div class="block"><p>وهو الناتج الرئيسي لمرحلة التصميم قبل الانتقال إلى Implementation.</p></div></article></section><section class="section" id="ch7"><div class="chapter-banner"><div class="ch-tag">CHAPTER 07</div><h2>User Interface Design</h2><p>كيف سيتفاعل الإنسان مع النظام؟ نركز على HCI وUsability وInputs وOutputs وForms وValidation وReports وSecurity وResponsive Design وPrototyping.</p></div><article class="card"><div class="card-head"><span class="num">★</span><h3>هدف الفصل وما الذي ستتقنه</h3></div><div class="block"><p>هذا أول Chapter في Phase 3.</p><p>يركز على تصميم واجهة تجعل النظام:</p><ul class="list"><li>سهل التعلم.</li><li>سهل الاستخدام.</li><li>واضحًا للمستخدم.</li><li>يقلل الأخطاء.</li><li>يزيد الإنتاجية.</li><li>يعرض المعلومات بطريقة مناسبة.</li></ul><p>كما يغطي:</p><ul class="list"><li>Human–Computer Interaction</li><li>مبادئ تصميم الواجهة</li><li>Inputs</li><li>Outputs</li><li>Forms</li><li>Reports</li><li>Validation</li><li>Security</li><li>Responsive Design</li><li>Prototyping</li></ul></div><div class="block"><h4>الهدف الرئيسي من Chapter 7</h4><p>السؤال الكبير هو:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>كيف سيتفاعل الإنسان مع النظام؟</strong></p></div></div><p>UI لا تعني فقط:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>الألوان والأزرار.</p></div></div><p>بل تشمل كل ما يؤثر على الاتصال بين:</p><p><strong>User ↔ System</strong></p><p>مثل:</p><ul class="list"><li>Screens</li><li>Menus</li><li>Forms</li><li>Inputs</li><li>Outputs</li><li>Messages</li><li>Reports</li><li>Validation</li><li>Navigation</li><li>Help</li><li>Feedback</li><li>Security Controls</li></ul></div></article><article class="card" id="c7-1"><div class="card-head"><span class="num">7.1</span><h3>User Interfaces</h3><span class="badge b-red">🔴 مهم</span></div><div class="block"><h4>ماذا سندرس؟</h4></div><div class="block"><h4>User Interface — UI</h4><p>وهي نقطة الاتصال بين المستخدم والنظام.</p><p>لا ننظر إليها كـ"تصميم جميل" فقط.</p><p>بل يجب أن تمكن المستخدم من:</p><div class="flow"><span class="step hi"><strong>Input</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Interaction</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Receive Output</strong></span></div><p>بطريقة صحيحة.</p></div><div class="block"><h4>أهم المصطلحات</h4><div class="chips"><span class="chip">User Interface — UI</span><span class="chip">Input</span><span class="chip">Output</span><span class="chip">Screen</span><span class="chip">Menu</span><span class="chip">Form</span><span class="chip">Usability</span><span class="chip">User Satisfaction</span></div></div><div class="block"><h4>لماذا الموضوع مهم؟</h4><p>قد يكون عندك:</p><ul class="list"><li>Database ممتازة.</li><li>Backend ممتاز.</li><li>Architecture ممتازة.</li></ul><p>لكن الموظف لا يستطيع استخدام النظام بسهولة.</p><p>هنا يصبح النظام عمليًا سيئًا.</p></div><div class="block"><h4>المستوى المطلوب</h4><p>🔴 <strong>فهم أساسي قوي</strong></p></div></article><article class="card" id="c7-2"><div class="card-head"><span class="num">7.2</span><h3>Human–Computer Interaction — HCI</h3><span class="badge b-red">🔴🔴 إتقان</span></div><div class="block"><h4>HCI</h4><p>يعني دراسة العلاقة والتفاعل بين:</p><p><strong>Human</strong></p><p>و</p><p><strong>Computer System</strong></p><p>الهدف:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>جعل النظام مناسبًا للطريقة التي يفكر ويتصرف بها الإنسان.</p></div></div></div><div class="block"><h4>ماذا سندرس؟</h4><ul class="list"><li>كيف يرى المستخدم المعلومات؟</li><li>كيف يتنقل؟</li><li>ما الذي يتوقع أن يحدث عند الضغط؟</li><li>ما مقدار المعلومات المناسبة؟</li><li>كيف نمنع الأخطاء؟</li><li>كيف نعطيه Feedback؟</li><li>كيف نقلل التعقيد؟</li></ul></div><div class="block"><h4>لماذا مهم؟</h4><p>تصميم الواجهة لا يبدأ من:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>ماذا يعجب المصمم؟</p></div></div><p>بل:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كيف يستطيع المستخدم إنجاز عمله بشكل أسهل وأسرع وأقل أخطاء؟</p></div></div></div><div class="block"><h4>المستوى</h4><p>🔴🔴 <strong>مهم جدًا</strong></p></div></article><article class="card" id="c7-3"><div class="card-head"><span class="num">7.3</span><h3>Seven Habits of Successful Interface Designers</h3></div><div class="block"><h4>7.3.1 Understand the Business</h4><p>قبل تصميم الشاشة:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>افهم الـBusiness.</p></div></div><p>لا تستطيع تصميم شاشة Warehouse إذا لم تفهم:</p><ul class="list"><li>كيف يدخل المخزون؟</li><li>من يستخدم الشاشة؟</li><li>ما المعلومات المهمة؟</li><li>ما خطوات العمل؟</li></ul></div><div class="block"><h4>7.3.2 Maximize Graphical Effectiveness</h4><p>استخدم العناصر البصرية بطريقة تخدم المستخدم.</p><p>ليس:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>المزيد من الرسومات = تصميم أفضل.</p></div></div><p>بل:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كل عنصر بصري له وظيفة.</p></div></div></div><div class="block"><h4>7.3.3 Think Like a User</h4><p>ضع نفسك مكان المستخدم.</p><p>ليس:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>أنا كمبرمج أعرف أين يوجد الزر.</p></div></div><p>بل:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>هل المستخدم الجديد سيعرف أين يوجد؟</p></div></div></div><div class="block"><h4>7.3.4 Use Models and Prototypes</h4><p>قبل البرمجة النهائية نستخدم:</p><ul class="list"><li>Models</li><li>Prototypes</li></ul><p>حتى نختبر الفكرة.</p></div><div class="block"><h4>7.3.5 Focus on Usability</h4></div><div class="block"><h4>Usability</h4><p>مدى سهولة وفعالية استخدام النظام.</p></div><div class="block"><h4>7.3.6 Invite Feedback</h4><p>اعرض التصميم للمستخدم.</p><p>اسأله.</p><p>عدّل.</p><p>اختبر مرة أخرى.</p></div><div class="block"><h4>7.3.7 Document Everything</h4><p>لا تعتمد على ذاكرتك.</p><p>وثق:</p><ul class="list"><li>Design decisions</li><li>Screens</li><li>Rules</li><li>Feedback</li><li>Changes</li></ul></div><div class="block"><h4>ما الذي سأستفيده؟</h4><p>ستتعلم أن تصميم UI هو عملية:</p><p><strong>Understand → Design → Prototype → Test → Feedback → Improve</strong></p><p>وليس مجرد رسم شاشة.</p></div></article><article class="card" id="c7-4"><div class="card-head"><span class="num">7.4</span><h3>Guidelines for User Interface Design</h3><span class="badge b-red">🔴🔴 إتقان</span></div><div class="block"><h4>7.4.1 Create an Interface Easy to Learn and Use</h4><p>يجب أن تكون الواجهة:</p><ul class="list"><li>واضحة.</li><li>متوقعة.</li><li>سهلة التعلم.</li><li>لا تحتاج شرحًا مستمرًا.</li></ul></div><div class="block"><h4>7.4.2 Enhance User Productivity</h4><p>التصميم يجب أن يجعل المستخدم ينجز عمله أسرع.</p><p>نقلل:</p><ul class="list"><li>Clicks غير الضرورية.</li><li>إعادة إدخال المعلومات.</li><li>الخطوات المتكررة.</li></ul></div><div class="block"><h4>7.4.3 Provide Flexibility</h4><p>ليس كل المستخدمين متساوين.</p><p>قد نحتاج:</p><ul class="list"><li>أكثر من طريقة للتنقل.</li><li>Shortcuts.</li><li>تخصيص بعض الخيارات.</li></ul></div><div class="block"><h4>7.4.4 Provide Help and Feedback</h4><p>النظام يجب أن يخبر المستخدم:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>ماذا حدث؟</p></div></div><p>مثل:</p><p><strong>Order Saved Successfully</strong></p><p>أو:</p><p><strong>Invalid Customer Number</strong></p><p>بدل أن يضغط المستخدم ولا يعرف هل العملية تمت أم لا.</p></div><div class="block"><h4>7.4.5 Create an Attractive Layout and Design</h4><p>الواجهة يجب أن تكون:</p><ul class="list"><li>Organized</li><li>Consistent</li><li>Readable</li></ul><p>لكن الجمال يخدم الوظيفة، وليس العكس.</p></div><div class="block"><h4>7.4.6 Enhance the Interface</h4><p>نستخدم عناصر UI المناسبة لتحسين التجربة.</p></div><div class="block"><h4>7.4.7 Focus on Data Entry Screens</h4><p>سندرس كيف نصمم:</p><ul class="list"><li>Fields</li><li>Labels</li><li>Input order</li><li>Defaults</li><li>Lists</li><li>Confirmation</li><li>Required fields</li></ul></div><div class="block"><h4>7.4.8 Use Validation Rules</h4><p>من أهم أجزاء UI Design.</p><p>قبل قبول البيانات نتأكد أنها صحيحة.</p></div><div class="block"><h4>Sequence Check</h4><p>هل البيانات بالترتيب الصحيح؟</p></div><div class="block"><h4>Existence Check</h4><p>هل الحقل الإجباري موجود؟</p></div><div class="block"><h4>Data Type Check</h4><p>هل القيمة من النوع الصحيح؟</p></div><div class="block"><h4>Range Check</h4><p>هل القيمة داخل النطاق؟</p></div><div class="block"><h4>Limit Check</h4><p>هل تتجاوز حدًا معينًا؟</p></div><div class="block"><h4>Reasonableness Check</h4><p>هل القيمة منطقية؟</p></div><div class="block"><h4>Validity Check</h4><p>هل القيمة موجودة ضمن القيم المسموحة؟</p></div><div class="block"><h4>Combination Check</h4><p>هل مجموعة القيم متوافقة مع بعضها؟</p><p>الهدف الأساسي:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>منع الخطأ قبل وصول البيانات إلى النظام.</strong></p></div></div></div><div class="block"><h4>7.4.9 Manage Data Effectively</h4><p>من مبادئ التصميم الجيد:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>أدخل البيانات مرة واحدة كلما أمكن.</p></div></div><p>و:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>اجمع البيانات أقرب ما يمكن إلى مصدرها.</p></div></div><p>و:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>استخدم Automated Data Capture عندما يكون مناسبًا.</p></div></div></div><div class="block"><h4>7.4.10 Reduce Input Volume</h4><p>لا تطلب من المستخدم إدخال شيء يستطيع النظام معرفته بنفسه.</p><p>مثال:</p><p>إذا النظام يعرف:</p><p><strong>Current Date</strong></p><p>فلا تجعل المستخدم يكتب التاريخ يدويًا في كل عملية.</p></div><div class="block"><h4>المستوى لـ7.4</h4><p>🔴🔴 <strong>إتقان عملي قوي</strong></p></div></article><article class="card" id="c7-5"><div class="card-head"><span class="num">7.5</span><h3>Source Document and Form Design</h3></div><div class="block"><h4>Source Document</h4><p>وثيقة تستخدم كمصدر لإدخال البيانات.</p><p>مثل:</p><ul class="list"><li>Order Form</li><li>Application Form</li><li>Invoice</li><li>Registration Form</li></ul></div><div class="block"><h4>ماذا سندرس؟</h4><p>كيف نصمم Form بحيث:</p><ul class="list"><li>الحقول واضحة.</li><li>ترتيبها منطقي.</li><li>المساحات مناسبة.</li><li>الأخطاء تقل.</li><li>المستخدم يعرف ماذا يكتب.</li></ul></div><div class="block"><h4>لماذا مهم؟</h4><p>القاعدة:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>Garbage In → Garbage Out</p></div></div><p>إذا البيانات التي تدخل سيئة، النتائج ستكون سيئة مهما كان النظام ممتازًا.</p></div></article><article class="card" id="c7-6"><div class="card-head"><span class="num">7.6</span><h3>Printed Output</h3></div><div class="block"><p>النظام لا ينتج Screens فقط.</p><p>قد ينتج:</p><ul class="list"><li>Reports</li><li>Statements</li><li>Invoices</li><li>Summaries</li></ul></div><div class="block"><h4>7.6.1 Report Design</h4><p>نتعلم كيفية ترتيب التقرير.</p><p>مثل:</p><ul class="list"><li>Report Header</li><li>Page Header</li><li>Column Headings</li><li>Detail Lines</li><li>Footer</li><li>Alignment</li><li>Grouping</li></ul></div><div class="block"><h4>7.6.2 Report Design Principles</h4><p>التقرير يجب أن يكون:</p><ul class="list"><li>Clear</li><li>Accurate</li><li>Readable</li><li>Useful</li></ul></div><div class="block"><h4>7.6.3 Types of Reports</h4></div><div class="block"><h4>Detail Report</h4><p>يعرض التفاصيل.</p></div><div class="block"><h4>Exception Report</h4><p>يعرض الحالات غير الطبيعية أو التي تحتاج انتباهًا.</p></div><div class="block"><h4>Summary Report</h4><p>يعرض المعلومات الملخصة.</p></div><div class="block"><h4>مثال</h4><p>مدير المتجر قد لا يحتاج:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كل فاتورة بالتفصيل.</p></div></div><p>بل:</p><p><strong>Summary Report</strong></p><p>عن إجمالي المبيعات.</p><p>بينما موظف المراجعة قد يحتاج:</p><p><strong>Detail Report</strong>.</p></div></article><article class="card" id="c7-7"><div class="card-head"><span class="num">7.7</span><h3>Technology Issues</h3></div><div class="block"><h4>7.7.1 Input Technology</h4><p>التقنيات التي تدخل البيانات.</p></div><div class="block"><h4>7.7.2 Output Technology</h4><p>التقنيات التي تعرض أو تنتج المعلومات.</p></div><div class="block"><h4>7.7.3 Input/Output Technology Linkage</h4><p>كيف يتكامل Input مع Output.</p></div><div class="block"><h4>الهدف</h4><p>لا نختار تقنية Input أو Output بشكل منفصل عن تجربة النظام.</p></div></article><article class="card" id="c7-8"><div class="card-head"><span class="num">7.8</span><h3>Control and Security Issues</h3></div><div class="block"><p>الأمن جزء من UI أيضًا.</p></div><div class="block"><h4>7.8.1 Input Control and Security</h4><p>حماية البيانات التي تدخل النظام.</p></div><div class="block"><h4>7.8.2 Output Control and Security</h4><p>حماية المعلومات التي يخرجها النظام.</p></div><div class="block"><h4>7.8.3 Input &amp; Output Control and Security</h4><p>يدخل فيها مفاهيم مثل:</p><ul class="list"><li>Authentication</li><li>Access Control</li><li>Encryption</li><li>Validation</li><li>Data Integrity</li></ul></div></article><article class="card" id="c7-9"><div class="card-head"><span class="num">7.9</span><h3>Emerging Trends</h3></div><div class="block"><h4>7.9.1 Responsive Web Design</h4><p>الواجهة يجب أن تتكيف مع أحجام الشاشات المختلفة.</p><p>مثل:</p><ul class="list"><li>Desktop</li><li>Tablet</li><li>Mobile</li></ul></div><div class="block"><h4>7.9.2 Prototyping</h4><p>قد يكون:</p><ul class="list"><li>Prototype مبكر.</li><li>Screens قابلة للتجربة.</li><li>نموذج يساعد المستخدم على إعطاء Feedback.</li></ul></div><div class="block"><h4>7.9.3 Wearable Computing</h4><p>التصميم لأجهزة Wearables وغيرها.</p><p>الهدف ليس أن نتخصص فيها الآن، بل نفهم كيف تغير الأجهزة الجديدة تصميم الواجهة.</p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>أهم مصطلحات Chapter 7</h3><span class="badge b-red">🔴🔴 إتقان</span></div><div class="block"><ul class="list"><li>UI</li><li>HCI</li><li>Usability</li><li>Prototype</li><li>Responsive Web Design</li><li>Input</li><li>Output</li><li>Form</li><li>Source Document</li><li>Validation Rule</li><li>Input Mask</li><li>Default Value</li><li>Report</li><li>Detail Report</li><li>Exception Report</li><li>Summary Report</li><li>Input Control</li><li>Output Control</li><li>Authentication</li><li>Data Integrity</li></ul></div><div class="block"><h4>مستوى Chapter 7</h4><p>🔴🔴 <strong>عملي ومهم جدًا</strong></p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>المخرجات العملية لـ Chapter 7</h3></div><div class="block"><p>في مشروعنا سنقوم بإنتاج:</p><div class="flow"><span class="step hi"><strong>User Flow</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Screen List</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Interface Structure</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Input Forms</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Validation Rules</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Feedback/Error Messages</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Prototype</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Output/Report Designs</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>UI Security Controls</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Responsive Considerations</strong></span></div></div></article></section><section class="section" id="ch8"><div class="chapter-banner"><div class="ch-tag">CHAPTER 08</div><h2>Data Design</h2><p>كيف سننظم ونخزن ونحمي بيانات النظام؟ نركز على DBMS وKeys وReferential Integrity وERD وCardinality وNormalization وData Control.</p></div><article class="card"><div class="card-head"><span class="num">★</span><h3>هدف الفصل وما الذي ستتقنه</h3></div><div class="block"><p>الآن انتهينا من:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كيف يتفاعل المستخدم مع النظام؟</p></div></div><p>السؤال التالي:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>كيف سننظم ونخزن ونحمي بيانات النظام؟</strong></p></div></div><p>Chapter 8 يركز على:</p><ul class="list"><li>Data Structures</li><li>DBMS</li><li>Schema</li><li>ERD</li><li>Keys</li><li>Referential Integrity</li><li>Normalization</li><li>Codes</li><li>Data Storage</li><li>Data Control</li></ul></div></article><article class="card" id="c8-1"><div class="card-head"><span class="num">8.1</span><h3>Data Design Concepts</h3></div><div class="block"><h4>ماذا سندرس؟</h4></div><div class="block"><h4>Data Structure</h4><p>كيف تُنظَّم البيانات.</p></div><div class="block"><h4>Database</h4><p>مجموعة بيانات مترابطة.</p></div><div class="block"><h4>Relational Model</h4><p>تنظيم البيانات داخل Tables مرتبطة ببعضها.</p></div><div class="block"><h4>8.1.3 Database Management Systems — DBMS</h4></div><div class="block"><h4>DBMS</h4><p>نظام يدير قاعدة البيانات.</p><p>يتيح:</p><ul class="list"><li>Add</li><li>Update</li><li>Delete</li><li>Retrieve</li><li>Manage</li><li>Analyze Data</li></ul></div><div class="block"><h4>لماذا هذا مهم؟</h4><p>نحن لا نريد فقط:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>إنشاء Tables.</p></div></div><p>بل نريد أن نفهم النظام الذي يدير هذه Tables.</p></div></article><article class="card" id="c8-2"><div class="card-head"><span class="num">8.2</span><h3>DBMS Components</h3></div><div class="block"><h4>8.2.1 Interfaces</h4><p>واجهات لـ:</p><ul class="list"><li>Users</li><li>Database Administrators</li><li>Related Information Systems</li></ul></div><div class="block"><h4>Data Manipulation Language — DML</h4><p>تسمح بعمليات مثل:</p><ul class="list"><li>Store</li><li>Retrieve</li><li>Update</li><li>Delete</li></ul></div><div class="block"><h4>Query Language</h4><p>طريقة طلب البيانات.</p></div><div class="block"><h4>SQL</h4><p><strong>Structured Query Language</strong></p><p>لغة مهمة للتعامل مع قواعد البيانات العلائقية.</p></div><div class="block"><h4>QBE</h4><p><strong>Query By Example</strong></p><p>طريقة تعتمد على تحديد مثال للبيانات المطلوبة.</p></div><div class="block"><h4>DBA</h4><p><strong>Database Administrator</strong></p><p>مسؤول عن أشياء مثل:</p><ul class="list"><li>Security</li><li>Integrity</li><li>Backups</li><li>Recovery</li><li>Maintenance</li><li>User Support</li></ul></div><div class="block"><h4>8.2.2 Schema</h4></div><div class="block"><h4>Schema</h4><p>الوصف العام لبنية قاعدة البيانات:</p><ul class="list"><li>Tables</li><li>Fields</li><li>Relationships</li></ul></div><div class="block"><h4>Subschema</h4><p>View محددة للمستخدم أو مجموعة مستخدمين.</p></div><div class="block"><h4>8.2.3 Physical Data Repository</h4><p>المكان الفعلي الذي تحفظ فيه Metadata ومعلومات التصميم والبنية.</p></div></article><article class="card" id="c8-3"><div class="card-head"><span class="num">8.3</span><h3>Web-Based Design</h3></div><div class="block"><p>كيف تتعامل Web Application مع Database.</p><p>الفكرة العامة:</p><div class="flow"><span class="step hi"><strong>Browser</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Web Layer / Middleware</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Database</strong></span></div><p>ويجب حماية:</p><ul class="list"><li>Database</li><li>Web Server</li><li>Communication Links</li></ul></div></article><article class="card" id="c8-4"><div class="card-head"><span class="num">8.4</span><h3>Data Design Terms</h3><span class="badge b-red">🔴🔴 إتقان</span></div><div class="block"><h4>Entity</h4><p>شيء نجمع عنه بيانات.</p><p>مثل:</p><ul class="list"><li>Customer</li><li>Product</li><li>Order</li></ul></div><div class="block"><h4>Field / Attribute</h4><p>خاصية واحدة.</p><p>مثل:</p><p>Customer Name.</p></div><div class="block"><h4>Record / Tuple</h4><p>مجموعة Fields تصف Instance واحدة.</p></div><div class="block"><h4>Table</h4><p>مجموعة Records منظمة.</p></div><div class="block"><h4>8.4.2 Key Fields</h4></div><div class="block"><h4>Primary Key</h4><p>يميز كل Record بشكل فريد.</p><p>مثال:</p><p><strong>Customer_ID</strong></p></div><div class="block"><h4>Candidate Key</h4><p>Field يمكن أن يكون Primary Key.</p></div><div class="block"><h4>Foreign Key</h4><p>Field يشير إلى Primary Key في Table أخرى.</p></div><div class="block"><h4>Secondary Key</h4><p>Field يستخدم للبحث أو Sorting ولكنه ليس Primary Key.</p></div><div class="block"><h4>مفاهيم أخرى</h4><ul class="list"><li>Composite Key</li><li>Combination Key</li><li>Super Key</li><li>Alternate Key</li><li>Surrogate Key</li></ul><p>المهم:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>لماذا نستخدم كل نوع؟</p></div></div></div><div class="block"><h4>8.4.3 Referential Integrity</h4><p>من أهم مفاهيم Database Design.</p><p>مثال:</p><p>Order يحتوي:</p><p><strong>Customer_ID = 500</strong></p><p>لكن Customer 500 غير موجود.</p><p>هذا يخلق مشكلة.</p><p>Referential Integrity تمنع العلاقات غير الصحيحة.</p></div><div class="block"><h4>المستوى</h4><p>🔴🔴 <strong>أساسي جدًا</strong></p></div></article><article class="card" id="c8-5"><div class="card-head"><span class="num">8.5</span><h3>Entity-Relationship Diagrams — ERD</h3><span class="badge b-red">🔴🔴🔴 إتقان كامل</span></div><div class="block"><p>واحد من أهم أجزاء Phase 3 كلها.</p></div><div class="block"><h4>ERD</h4><p>تمثيل بصري لـ:</p><ul class="list"><li>Entities</li><li>Relationships</li><li>Cardinality</li></ul></div><div class="block"><h4>8.5.1 Drawing an ERD</h4><p>سنتعلم رسم ERD بطريقة صحيحة.</p></div><div class="block"><h4>8.5.2 Types of Relationships</h4></div><div class="block"><h4>One-to-One — 1:1</h4><p>مثال:</p><p>Employee ↔ Locker</p><p>حسب Business Rules.</p></div><div class="block"><h4>One-to-Many — 1:M</h4><p>مثال:</p><p>Customer</p><p>→ Orders</p><p>عميل واحد يمكن أن يملك عدة Orders.</p></div><div class="block"><h4>Many-to-Many — M:N</h4><p>مثال:</p><p>Students</p><p>↔ Courses</p><p>غالبًا نحتاج:</p><p><strong>Associative Entity</strong></p><p>لحل M:N.</p></div><div class="block"><h4>8.5.3 Cardinality</h4><p>توضح:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>كم Instance من Entity يمكن أن ترتبط بعدد من Entity أخرى؟</p></div></div></div><div class="block"><h4>Crow's Foot Notation</h4><p>Notation شائعة لتمثيل Cardinality.</p></div><div class="block"><h4>مستوى ERD</h4><p>🔴🔴🔴 <strong>إتقان كامل عملي</strong></p></div></article><article class="card" id="c8-6"><div class="card-head"><span class="num">8.6</span><h3>Data Normalization</h3><span class="badge b-red">🔴🔴🔴 إتقان كامل</span></div><div class="block"><p>من أهم Topics في Database Design.</p></div><div class="block"><h4>الهدف</h4><p>تقليل:</p><ul class="list"><li>Redundancy</li><li>Dependency Problems</li><li>Update Problems</li><li>Data Inconsistency</li></ul></div><div class="block"><h4>8.6.1 Standard Notation Format</h4><p>نتعلم الطريقة المستخدمة لتمثيل البيانات أثناء Normalization.</p></div><div class="block"><h4>8.6.2 First Normal Form — 1NF</h4><p>الفكرة الأساسية:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>لا توجد Repeating Groups.</p></div></div></div><div class="block"><h4>8.6.3 Second Normal Form — 2NF</h4><p>يجب أن تكون 1NF.</p><p>ثم:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>جميع Non-Key Fields تعتمد على Primary Key بالكامل.</p></div></div></div><div class="block"><h4>8.6.4 Third Normal Form — 3NF</h4><p>يجب أن تكون 2NF.</p><p>ولا توجد:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>Non-Key Field تعتمد على Non-Key Field أخرى.</p></div></div></div><div class="block"><h4>لماذا Normalization مهمة؟</h4><p>لمنع مشاكل مثل:</p></div><div class="block"><h4>Update Anomaly</h4><p>نغير بيانات في مكان وننسى مكانًا آخر.</p></div><div class="block"><h4>Insert Problems</h4><p>لا نستطيع إضافة Record إلا بإضافة بيانات غير لازمة.</p></div><div class="block"><h4>Delete Problems</h4><p>حذف Record يؤدي إلى فقدان معلومات نحتاجها.</p></div><div class="block"><h4>المستوى</h4><p>🔴🔴🔴 <strong>إتقان عملي كامل</strong></p></div></article><article class="card" id="c8-7"><div class="card-head"><span class="num">8.7</span><h3>Codes</h3><span class="badge b-green">🟢 فهم قوي</span></div><div class="block"><h4>ما هو Code؟</h4><p>مجموعة Characters أو Numbers تمثل معلومات.</p><p>مثل:</p><p>Product Code.</p></div><div class="block"><h4>لماذا نستخدم Codes؟</h4><p>يمكن أن:</p><ul class="list"><li>تسرع الإدخال.</li><li>تقلل مساحة التخزين.</li><li>تسهل Sorting.</li><li>تساعد Classification.</li><li>تخفي أو تظهر Information حسب التصميم.</li></ul></div><div class="block"><h4>أنواع Codes</h4><ul class="list"><li>Sequence Code</li><li>Block Sequence Code</li><li>Classification Code</li><li>Alphabetic Code</li><li>Significant Digit Code</li><li>Derivation Code</li><li>Cipher Code</li><li>Action Code</li></ul></div><div class="block"><h4>المستوى</h4><p>🟢 فهم قوي، لا يحتاج حفظ عشوائي.</p></div></article><article class="card" id="c8-8"><div class="card-head"><span class="num">8.8</span><h3>Data Storage and Access</h3><span class="badge b-amber">🟡 معرفة</span></div><div class="block"><h4>8.8.1 Tools and Techniques</h4></div><div class="block"><h4>Data Warehouse</h4><p>مستودع يجمع بيانات من مصادر متعددة لدعم التحليل واتخاذ القرار.</p></div><div class="block"><h4>Data Mart</h4><p>نسخة أصغر موجهة لقسم محدد.</p><p>مثلاً:</p><p>Marketing Data Mart.</p></div><div class="block"><h4>Data Mining</h4><p>استخراج Patterns ومعلومات من كميات كبيرة من البيانات.</p></div><div class="block"><h4>8.8.2 Logical vs Physical Storage</h4><p>نميز بين:</p><p><strong>Logical Storage</strong></p><p>كيف نرى البيانات منطقيًا.</p><p>و:</p><p><strong>Physical Storage</strong></p><p>كيف يتم تخزينها فعليًا.</p></div><div class="block"><h4>8.8.3 Data Coding</h4><p>نتعرف على Formats مثل:</p><ul class="list"><li>ASCII</li><li>EBCDIC</li><li>Binary</li><li>Unicode</li></ul><p>وكيفية تمثيل Dates وغيرها.</p></div><div class="block"><h4>المستوى</h4><p>🟡 فهم مناسب.</p></div></article><article class="card" id="c8-9"><div class="card-head"><span class="num">8.9</span><h3>Data Control</h3></div><div class="block"><p>من أهم أجزاء Data Design.</p></div><div class="block"><h4>Access Control</h4><p>من يستطيع قراءة البيانات؟</p><p>من يستطيع تعديلها؟</p><p>من يستطيع حذفها؟</p></div><div class="block"><h4>Permissions</h4><p>قد يكون المستخدم:</p><p><strong>Read Only</strong></p><p>بينما المدير:</p><p><strong>Read + Update</strong></p><p>ومسؤول قاعدة البيانات يملك صلاحيات أوسع.</p></div><div class="block"><h4>Encryption</h4><p>تحويل البيانات لشكل لا يستطيع غير المصرح له قراءته.</p></div><div class="block"><h4>Backup</h4><p>نسخ احتياطية.</p></div><div class="block"><h4>Recovery</h4><p>استعادة البيانات.</p></div><div class="block"><h4>Audit Log</h4><p>يسجل عمليات:</p><ul class="list"><li>Access</li><li>Changes</li></ul></div><div class="block"><h4>Audit Fields</h4><p>مثل:</p><ul class="list"><li>Created Date</li><li>Modified Date</li><li>Modified By</li></ul></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>أهم مصطلحات Chapter 8</h3></div><div class="block"><ul class="list"><li>Database</li><li>DBMS</li><li>DML</li><li>SQL</li><li>QBE</li><li>DBA</li><li>Schema</li><li>Subschema</li><li>Entity</li><li>Field / Attribute</li><li>Record / Tuple</li><li>Table</li><li>Primary Key</li><li>Candidate Key</li><li>Foreign Key</li><li>Secondary Key</li><li>Referential Integrity</li><li>ERD</li><li>Cardinality</li><li>Crow's Foot</li><li>1:1</li><li>1:M</li><li>M:N</li><li>Associative Entity</li><li>Normalization</li><li>1NF</li><li>2NF</li><li>3NF</li><li>Data Warehouse</li><li>Data Mart</li><li>Data Mining</li><li>Permissions</li><li>Encryption</li><li>Backup</li><li>Recovery</li><li>Audit Log</li></ul></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>أدوات وتقنيات Chapter 8</h3></div><div class="block"><h4>SQL</h4><p>للتعامل مع قواعد البيانات.</p></div><div class="block"><h4>QBE</h4><p>لطلب البيانات بطريقة مثال.</p></div><div class="block"><h4>Oracle</h4></div><div class="block"><h4>IBM DB2</h4></div><div class="block"><h4>Microsoft Access</h4><p>أمثلة DBMS.</p></div><div class="block"><h4>Visible Analyst</h4><p>كـCASE Tool لرسم ERD.</p><p>لكن:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>الهدف هنا ليس تعلم خمسة برامج.</p></div></div><p>الهدف:</p><p><strong>Data Design Concepts first.</strong></p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>المخرجات العملية لـ Chapter 8</h3></div><div class="block"><p>سنخرج لمشروعنا بـ:</p><div class="flow"><span class="step hi"><strong>Entity List</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Attributes</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Key Selection</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Relationships</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Cardinality</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>ERD</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Initial Tables</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>1NF</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>2NF</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>3NF</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Final Normalized Data Model</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Permissions</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Backup / Security / Data Control Plan</strong></span></div></div></article></section><section class="section" id="ch9"><div class="chapter-banner"><div class="ch-tag">CHAPTER 09</div><h2>System Architecture</h2><p>كيف ستكون البنية التقنية الكلية للنظام؟ ننتقل من Logical Design إلى Physical Blueprint يشمل Clients وServers وNetworks وProcessing وCloud وSecurity.</p></div><article class="card"><div class="card-head"><span class="num">★</span><h3>هدف الفصل وما الذي ستتقنه</h3></div><div class="block"><p>وصلنا الآن إلى أكبر مستوى في تصميم النظام.</p><p>السؤال:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>كيف ستكون البنية التقنية الكلية للنظام؟</strong></p></div></div><p>System Architecture تحول Logical Design إلى <strong>Physical Blueprint</strong> تشمل:</p><ul class="list"><li>Hardware</li><li>Software</li><li>Data</li><li>Network</li><li>Processing</li><li>Security</li></ul></div></article><article class="card" id="c9-1"><div class="card-head"><span class="num">9.1</span><h3>Architecture Checklist</h3><span class="badge b-red">🔴🔴 إتقان</span></div><div class="block"><p>قبل أن نقول:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>سنستخدم Cloud.</p></div></div><p>أو:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>Client/Server.</p></div></div><p>يجب أن ننظر إلى عدة عوامل.</p></div><div class="block"><h4>9.1.1 Corporate Organization and Culture</h4><p>هل المؤسسة:</p><ul class="list"><li>Centralized؟</li><li>Decentralized؟</li><li>لديها فروع؟</li><li>كيف تُدار؟</li></ul><p>Architecture يجب أن تتناسب مع طريقة عمل المؤسسة.</p></div><div class="block"><h4>9.1.2 Enterprise Resource Planning — ERP</h4><p>هل المؤسسة تستخدم ERP؟</p><p>وما تأثير ذلك على Architecture؟</p></div><div class="block"><h4>9.1.3 Scalability</h4><p>هل النظام قادر على النمو؟</p><p>Users اليوم:</p><p>100</p><p>بعد سنوات:</p><p>10,000.</p></div><div class="block"><h4>9.1.4 Web Integration</h4><p>هل يحتاج النظام للتكامل مع Web؟</p></div><div class="block"><h4>9.1.5 Legacy Systems</h4><p>هل هناك أنظمة قديمة يجب أن نتصل بها؟</p></div><div class="block"><h4>9.1.6 Processing Options</h4><p>أين ستتم معالجة البيانات؟</p></div><div class="block"><h4>9.1.7 Security</h4><p>كيف نحمي Architecture؟</p></div><div class="block"><h4>9.1.8 Compliance</h4><p>هل توجد Standards أو Regulations يجب الالتزام بها؟</p></div><div class="block"><h4>9.1.9 Corporate Portals</h4><p>هل يوجد Portal مركزي للمؤسسة؟</p></div><div class="block"><h4>لماذا Architecture Checklist مهمة؟</h4><p>لأن اختيار Architecture ليس:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>"Microservices أحدث، إذًا نستخدمها."</p></div></div><p>بل:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>ما Architecture التي تناسب Business Requirements والبيئة والقيود؟</p></div></div></div><div class="block"><h4>المستوى</h4><p>🔴🔴 <strong>مهم جدًا</strong></p></div></article><article class="card" id="c9-2"><div class="card-head"><span class="num">9.2</span><h3>Evolution of System Architecture</h3></div><div class="block"><h4>9.2.1 Mainframe Architecture</h4></div><div class="block"><h4>Centralized Processing</h4><p>المعالجة تتم مركزيًا.</p></div><div class="block"><h4>9.2.2 Personal Computers</h4><p>انتقلت قوة Computing للمستخدم.</p></div><div class="block"><h4>9.2.3 Network Evolution</h4><p>ربطت الأجهزة والأنظمة وأصبح Computing موزعًا.</p></div><div class="block"><h4>الهدف</h4><p>ليس حفظ التاريخ.</p><p>بل فهم:</p><p><strong>Centralized → Distributed → Networked → Internet/Cloud</strong></p></div></article><article class="card" id="c9-3"><div class="card-head"><span class="num">9.3</span><h3>Client/Server Architecture</h3><span class="badge b-red">🔴🔴 إتقان</span></div><div class="block"><p>هذا من أهم Topics في Chapter 9.</p></div><div class="block"><h4>Client</h4><p>عادة يتعامل مع:</p><ul class="list"><li>User Interface</li><li>User Requests</li></ul></div><div class="block"><h4>Server</h4><p>يتعامل مع:</p><ul class="list"><li>Data</li><li>Database Management</li><li>Processing/Services بحسب التصميم</li></ul><p>الفكرة الأساسية:</p><div class="flow"><span class="step hi"><strong>Client sends request</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Server processes request</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Server sends result</strong></span></div></div><div class="block"><h4>9.3.1 Client's Role</h4><p>نفهم ماذا يفعل Client.</p></div><div class="block"><h4>9.3.2 Client/Server Tiers</h4></div><div class="block"><h4>Two-Tier Architecture</h4><p>Client</p><p>Server</p></div><div class="block"><h4>Three-Tier Architecture</h4><div class="flow"><span class="step hi">Presentation</span><span aria-hidden="true" class="arrow">←</span><span class="step">Application</span><span aria-hidden="true" class="arrow">←</span><span class="step hi">Data</span></div></div><div class="block"><h4>N-Tier Architecture</h4><p>أكثر من Layer حسب الحاجة.</p></div><div class="block"><h4>Thin Client</h4><p>معالجة أقل على Client.</p></div><div class="block"><h4>Fat / Thick Client</h4><p>معالجة أكبر على Client.</p></div><div class="block"><h4>9.3.3 Middleware</h4><p>طبقة تساعد Components المختلفة على التواصل.</p></div><div class="block"><h4>9.3.4 Cost–Benefit Issues</h4><p>Architecture ليست قرارًا تقنيًا فقط.</p><p>ندرس:</p><ul class="list"><li>Cost</li><li>Benefits</li><li>Maintenance</li><li>Infrastructure</li></ul></div><div class="block"><h4>9.3.5 Performance Issues</h4><p>ندرس:</p><ul class="list"><li>Network Load</li><li>Response Time</li><li>Server Capacity</li><li>Number of Users</li><li>Traffic</li></ul></div><div class="block"><h4>مستوى Client/Server</h4><p>🔴🔴 <strong>إتقان المفهوم</strong></p></div></article><article class="card" id="c9-4"><div class="card-head"><span class="num">9.4</span><h3>Impact of the Internet</h3><span class="badge b-green">🟢 فهم قوي</span></div><div class="block"><h4>9.4.1 Internet-Based Architecture</h4><p>Components قد تكون موزعة عبر الإنترنت.</p><p>مثلاً:</p><div class="flow"><span class="step hi">Browser</span><span aria-hidden="true" class="arrow">←</span><span class="step">Web/Application Server</span><span aria-hidden="true" class="arrow">←</span><span class="step hi">Database Server</span></div></div><div class="block"><h4>9.4.2 Cloud Computing</h4><p>هنا ندرس Cloud من منظور Architecture.</p><p>الفكرة:</p><p>Resources وProcessing وStorage يمكن أن توفرها أنظمة Remote عبر الإنترنت.</p></div><div class="block"><h4>Scaling on Demand</h4><p>زيادة الموارد عند زيادة الطلب.</p><p>ويرتبط Cloud أيضًا بـSaaS.</p></div><div class="block"><h4>المستوى</h4><p>🟢 فهم قوي.</p><p>لا نبدأ كورس AWS الآن.</p></div><div class="block"><h4>9.4.3 Web 2.0</h4><p>ندرس تطور Web نحو:</p><ul class="list"><li>Interaction</li><li>User-Generated Content</li><li>Collaboration</li></ul></div><div class="block"><h4>المستوى</h4><p>🟡 معرفة.</p></div></article><article class="card" id="c9-5"><div class="card-head"><span class="num">9.5</span><h3>E-Commerce Architecture</h3></div><div class="block"><h4>9.5.1 In-House Solutions</h4><p>الشركة تبني النظام بنفسها.</p></div><div class="block"><h4>المزايا الممكنة</h4><p>تحكم أكبر.</p><p>لكن مسؤوليات وتكاليف أكبر.</p></div><div class="block"><h4>9.5.2 Packaged Solutions</h4><p>شراء Software جاهز.</p></div><div class="block"><h4>9.5.3 Application Service Providers — ASP</h4><p>الاعتماد على Provider يقدم Solution كخدمة.</p><p>والاختيار يعتمد على أمور مثل:</p><ul class="list"><li>Control</li><li>Cost</li><li>Scalability</li></ul></div></article><article class="card" id="c9-6"><div class="card-head"><span class="num">9.6</span><h3>Processing Methods</h3><span class="badge b-red">🔴 مهم</span></div><div class="block"><h4>9.6.1 Online Processing</h4><p>المعاملة تتم فورًا.</p><p>مثال:</p><p>عملية Card Payment.</p><p>يدخل المستخدم البيانات.</p><p>يتم:</p><p><strong>Validate → Process → Update</strong></p><p>مباشرة.</p></div><div class="block"><h4>9.6.2 Batch Processing</h4><p>نجمع Transactions.</p><p>ثم نعالجها كمجموعة في وقت محدد.</p><p>مثال:</p><p>Payroll processing.</p></div><div class="block"><h4>السؤال الذي يجب أن تستطيع الإجابة عنه</h4><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>متى أستخدم Online Processing؟</p></div></div><p>ومتى:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>Batch Processing؟</p></div></div></div><div class="block"><h4>المستوى</h4><p>🔴 <strong>مهم</strong></p></div></article><article class="card" id="c9-7"><div class="card-head"><span class="num">9.7</span><h3>Network Models</h3><span class="badge b-green">🟢 فهم قوي</span></div><div class="block"><h4>9.7.1 OSI Model</h4><p><strong>Open Systems Interconnection Model</strong></p><p>نأخذه لفهم Communication Layers.</p><p>الهدف هنا ليس كورس شبكات كامل.</p><p>لكن يجب أن تفهم لماذا يوجد Layered Network Model.</p></div><div class="block"><h4>9.7.2 Network Topologies</h4><p>نتعرف على:</p></div><div class="block"><h4>Bus</h4></div><div class="block"><h4>Star</h4></div><div class="block"><h4>Ring</h4><p>وغيرها.</p></div><div class="block"><h4>مصطلحات مرتبطة</h4><div class="chips"><span class="chip">LAN</span><span class="chip">WAN</span><span class="chip">Node</span><span class="chip">Physical Topology</span><span class="chip">Logical Topology</span></div></div><div class="block"><h4>المستوى</h4><p>🟢 فهم جيد.</p></div></article><article class="card" id="c9-8"><div class="card-head"><span class="num">9.8</span><h3>Network Devices</h3><span class="badge b-green">🟢 فهم قوي</span></div><div class="block"><p>ندرس وظيفة أجهزة الشبكة.</p></div><div class="block"><h4>Router</h4><p>يربط الشبكات ويوجه Traffic.</p></div><div class="block"><h4>Gateway</h4><p>يربط أنظمة/شبكات مختلفة.</p></div><div class="block"><h4>Proxy Server</h4><p>يعمل كوسيط بين المستخدم وموارد أخرى.</p><p>ويشمل أيضًا:</p><ul class="list"><li>Switch</li><li>Hub</li><li>Bridge</li><li>Modem</li></ul></div><div class="block"><h4>المستوى</h4><p>🟢 فهم الوظيفة، وليس تخصص Network Engineering.</p></div></article><article class="card" id="c9-9"><div class="card-head"><span class="num">9.9</span><h3>Wireless Networks</h3><span class="badge b-green">🟢 فهم قوي</span></div><div class="block"><h4>9.9.1 Standards</h4><p>يدخل فيها:</p><p><strong>IEEE 802.11</strong></p><p>وتفرعات Wi-Fi المختلفة.</p></div><div class="block"><h4>9.9.2 Topologies</h4><p>مثل:</p><ul class="list"><li>Infrastructure Mode</li><li>Access Points</li><li>BSS</li><li>ESS</li></ul></div><div class="block"><h4>9.9.3 Trends</h4><p>نتعرف على اتجاهات Wireless.</p><p>ومن التقنيات:</p></div><div class="block"><h4>Bluetooth</h4><p>اتصال قصير المدى.</p></div><div class="block"><h4>NFC</h4><p>Near-Field Communication.</p></div><div class="block"><h4>المستوى</h4><p>🟡 إلى 🟢 حسب الموضوع.</p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>أهم مصطلحات Chapter 9</h3></div><div class="block"><ul class="list"><li>System Architecture</li><li>Hardware Architecture</li><li>Software Architecture</li><li>Data Architecture</li><li>Network Architecture</li><li>Client</li><li>Server</li><li>Client/Server</li><li>Two-Tier</li><li>Three-Tier</li><li>N-Tier</li><li>Thin Client</li><li>Fat Client</li><li>Middleware</li><li>Distributed System</li><li>DDBMS</li><li>Internet-Based Architecture</li><li>Cloud Computing</li><li>Scaling on Demand</li><li>SaaS</li><li>Online Processing</li><li>Batch Processing</li><li>OSI Model</li><li>Network Topology</li><li>LAN</li><li>WAN</li><li>Router</li><li>Gateway</li><li>Proxy Server</li><li>Switch</li><li>Wi-Fi</li><li>802.11</li><li>Bluetooth</li><li>NFC</li><li>Scalability</li><li>Legacy System</li><li>Compliance</li><li>Corporate Portal</li></ul></div></article></section><section class="section" id="tools"><div class="section-kicker">خريطة المرحلة</div><h2>الأدوات والتقنيات التي تظهر في Phase 3</h2><div class="block"><div class="table-wrap"><table><thead><tr><th>الأداة / التقنية</th><th>Chapter</th><th>فائدتها</th><th>مستوى الدراسة</th></tr></thead><tbody><tr><td>HCI</td><td>7</td><td>فهم تفاعل الإنسان مع النظام</td><td>إتقان</td></tr><tr><td>Prototype</td><td>7</td><td>تجربة التصميم</td><td>إتقان</td></tr><tr><td>Responsive Web Design</td><td>7</td><td>دعم الشاشات المختلفة</td><td>فهم قوي</td></tr><tr><td>Validation Rules</td><td>7</td><td>منع Input Errors</td><td>إتقان</td></tr><tr><td>Input Masks</td><td>7</td><td>تنظيم Data Entry</td><td>فهم عملي</td></tr><tr><td>Reports</td><td>7</td><td>تصميم Outputs</td><td>إتقان الأساس</td></tr><tr><td>DBMS</td><td>8</td><td>إدارة البيانات</td><td>إتقان المفهوم</td></tr><tr><td>SQL</td><td>8</td><td>الوصول للبيانات</td><td>فهم دوره هنا</td></tr><tr><td>QBE</td><td>8</td><td>Query Technique</td><td>معرفة</td></tr><tr><td>ERD</td><td>8</td><td>تصميم Entities والعلاقات</td><td>إتقان</td></tr><tr><td>Crow's Foot</td><td>8</td><td>Cardinality</td><td>إتقان</td></tr><tr><td>Normalization</td><td>8</td><td>تحسين تصميم البيانات</td><td>إتقان</td></tr><tr><td>Visible Analyst</td><td>8</td><td>CASE/ERD Modeling</td><td>معرفة الأداة</td></tr><tr><td>Oracle / DB2 / Access</td><td>8</td><td>أمثلة DBMS</td><td>معرفة</td></tr><tr><td>Data Warehouse</td><td>8</td><td>Enterprise Analysis Data</td><td>فهم</td></tr><tr><td>Data Mining</td><td>8</td><td>تحليل البيانات</td><td>فهم</td></tr><tr><td>Client/Server</td><td>9</td><td>Architecture</td><td>إتقان</td></tr><tr><td>Middleware</td><td>9</td><td>ربط Components</td><td>فهم قوي</td></tr><tr><td>Cloud Computing</td><td>9</td><td>Internet Architecture</td><td>فهم قوي</td></tr><tr><td>Online Processing</td><td>9</td><td>Real-time Processing</td><td>إتقان</td></tr><tr><td>Batch Processing</td><td>9</td><td>Batch Transactions</td><td>إتقان</td></tr><tr><td>OSI</td><td>9</td><td>Network Model</td><td>فهم</td></tr><tr><td>Network Topologies</td><td>9</td><td>Network Design</td><td>فهم</td></tr><tr><td>Router / Gateway / Proxy</td><td>9</td><td>Network Components</td><td>فهم</td></tr><tr><td>Wi-Fi / Bluetooth / NFC</td><td>9</td><td>Wireless Communication</td><td>معرفة جيدة</td></tr></tbody></table></div></div></section><section class="section" id="mastery"><div class="section-kicker">مستويات الإتقان</div><h2>ماذا يجب أن نتقنه فعلًا من Phase 3؟</h2><p class="section-sub">قسّم الدراسة إلى ما يجب إتقانه عمليًا، وما يحتاج فهمًا قويًا، وما يكفي أن تعرف مكانه الآن.</p><div class="mastery-grid"><div class="mastery red"><h4>🔴🔴 المستوى الأول — إتقان عملي</h4><ul><li>لا نخرج من Design بدون إتقان:</li><li>UI Design Principles</li><li>HCI</li><li>Usability</li><li>Input Design</li><li>Validation Rules</li><li>Forms</li><li>Output / Report Design</li><li>Prototyping</li><li>Data Design</li><li>Entities &amp; Attributes</li><li>Primary / Foreign Keys</li><li>Referential Integrity</li><li>ERD</li><li>Cardinality</li><li>1:1 / 1:M / M:N</li><li>Normalization</li><li>1NF / 2NF / 3NF</li><li>Data Control</li><li>System Architecture</li><li>Client/Server</li><li>Architecture Tiers</li><li>Scalability</li><li>Online vs Batch Processing</li></ul></div><div class="mastery green"><h4>🟢 المستوى الثاني — فهم قوي</h4><ul><li>Responsive Design</li><li>Input/Output Security</li><li>Schema / Subschema</li><li>DBMS Components</li><li>SQL concept</li><li>Data Warehouse</li><li>Data Mining</li><li>Middleware</li><li>Cloud Computing</li><li>E-Commerce Architecture Options</li><li>Network Topologies</li><li>Routers / Gateways / Proxy Servers</li></ul></div><div class="mastery amber"><h4>🟡 المستوى الثالث — معرفة الآن</h4><ul><li>لا نحولها إلى مسارات جانبية:</li><li>Wearable Computing</li><li>QBE بالتفصيل</li><li>Oracle Administration</li><li>IBM DB2 Administration</li><li>Data Mining specialization</li><li>Network Engineering كامل</li><li>جميع IEEE Standards بالتفصيل</li><li>Bluetooth engineering</li><li>NFC engineering</li><li>نعرف مكانها ووظيفتها فقط.</li></ul></div></div></section><section class="section" id="connections"><div class="section-kicker">خريطة المرحلة</div><h2>كيف ترتبط Chapters 7 و8 و9؟</h2><div class="block"><h4>Chapter 7 — User Interface Design</h4><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>كيف سيتعامل المستخدم مع النظام؟</strong></p></div></div><p>نصمم:</p><p><strong>Screens + Forms + Inputs + Outputs + Validation</strong></p></div><div class="block"><h4>Chapter 8 — Data Design</h4><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>كيف سننظم ونخزن البيانات؟</strong></p></div></div><p>نصمم:</p><p><strong>Entities + Keys + Relationships + ERD + Normalized Tables</strong></p></div><div class="block"><h4>Chapter 9 — System Architecture</h4><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>أين وكيف ستعمل جميع هذه الأجزاء معًا؟</strong></p></div></div><p>نصمم:</p><p><strong>Clients + Servers + Networks + Processing + Cloud/Web + Security</strong></p></div></section><section class="section" id="example"><div class="section-kicker">خريطة المرحلة</div><h2>مثال واحد على مشروع متجر</h2><div class="block"><p>افترض أن Analysis انتهى وقال:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>Cashier must be able to process a sale.</p></div></div></div><article class="card"><div class="card-head"><span class="num">★</span><h3>Chapter 7 يسأل</h3></div><div class="block"><p>كيف ستكون شاشة البيع؟</p><p>فنقرر مثلًا:</p><ul class="list"><li>Product Search</li><li>Quantity</li><li>Customer</li><li>Payment</li><li>Total</li><li>Save</li></ul><p>مع Validation.</p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>Chapter 8 يسأل</h3></div><div class="block"><p>أين ستذهب Data؟</p><p>قد يكون عندنا:</p><ul class="list"><li>CUSTOMER</li><li>ORDER</li><li>ORDER_ITEM</li><li>PRODUCT</li><li>PAYMENT</li></ul><p>ثم:</p><p>ERD</p><p>ثم:</p><p>Normalization.</p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>Chapter 9 يسأل</h3></div><div class="block"><p>أين سيعمل النظام؟</p><p>مثلًا:</p><p><strong>Client</strong></p><p>واجهة الموظف</p><p><strong>Application Server</strong></p><p>Business Logic</p><p><strong>Database Server</strong></p><p>Data</p><p>وهكذا ترى أن الثلاثة ليست مواضيع منفصلة.</p><p>بل:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>Interface + Data + Architecture = System Design.</strong></p></div></div></div></article></section><section class="section" id="compare"><div class="section-kicker">خريطة المرحلة</div><h2>العلاقة بين Phase 2 وPhase 3</h2><div class="block"><h4>Phase 2 — Analysis</h4><p>قلت:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p>النظام يجب أن يسمح للمدير بإضافة Product.</p></div></div><p>هذا:</p><p><strong>WHAT</strong></p></div><div class="block"><h4>Phase 3 — Design</h4><p>نقرر:</p><ul class="list"><li>أين يظهر زر Add Product؟</li><li>ما Form المستخدمة؟</li><li>ما Fields؟</li><li>ما Validation؟</li><li>في أي Table تحفظ Data؟</li><li>ما Primary Key؟</li><li>ما Relationships؟</li><li>أين يعمل Application؟</li><li>من يتصل بمن؟</li></ul><p>هذا:</p><p><strong>HOW</strong></p></div><article class="card"><div class="card-head"><span class="num">★</span><h3>ماذا لا نفعل حتى الآن؟</h3></div><div class="block"><p>على الرغم من أننا أصبحنا قريبين جدًا من التنفيذ، ما زال هدف المرحلة:</p><p><strong>DESIGN</strong></p><p>وليس كتابة النظام كاملًا.</p><p>أي أن موضوعنا الأساسي ليس بعد:</p><ul class="list"><li>كتابة Classes الفعلية.</li><li>كتابة Controllers.</li><li>Coding كامل.</li><li>Unit Tests.</li><li>Installation.</li><li>Deployment النهائي.</li></ul><p>هذه تأتي بعد Design.</p></div></article></section><section class="section" id="outputs"><div class="section-kicker">خريطة المرحلة</div><h2>المخرجات الفعلية لـ Phase 3</h2><div class="block"><p>إذا طبقنا المرحلة على مشروع كامل، ملف التصميم قد يحتوي على:</p></div><div class="block"><h4>User Interface Design</h4><div class="flow"><span class="step hi"><strong>Screen Inventory</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Navigation / Interaction Design</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Forms</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Input Rules</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Validation Rules</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Error / Feedback Messages</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Prototype</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Reports / Outputs</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>UI Security Controls</strong></span></div></div><div class="block"><h4>Data Design</h4><div class="flow"><span class="step hi"><strong>Entities</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Attributes</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Keys</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Relationships</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>ERD</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Normalized Tables — 1NF → 2NF → 3NF</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Schema</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Data Storage Decisions</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Permissions</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Backup / Recovery / Audit Controls</strong></span></div></div><div class="block"><h4>System Architecture</h4><div class="flow"><span class="step hi"><strong>Architecture Requirements</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Architecture Checklist</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Clients</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Servers</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Tiers</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Processing Strategy</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Network Structure</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Web/Cloud Considerations</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Security</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step"><strong>Scalability</strong></span><span aria-hidden="true" class="arrow">←</span><span class="step hi"><strong>Integration / Legacy Considerations</strong></span></div></div><article class="card"><div class="card-head"><span class="num">★</span><h3>المخرج النهائي للمرحلة كلها</h3></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>System Design Specification</h3></div><div class="block"><p>بمعنى:</p><div class="callout"><span aria-hidden="true" class="co-icon">💡</span><div class="co-body"><p><strong>الوثيقة التي تحول ما فهمناه في Analysis إلى تصميم واضح يمكن أن تعتمد عليه مرحلة Implementation.</strong></p></div></div></div></article></section><section class="section" id="roadmap"><div class="section-kicker">خريطة المرحلة</div><h2>الخريطة المختصرة لـ Phase 3</h2><div class="block"><div class="code-panel"><pre>PHASE 2 — ANALYSIS
+What should the system do?
+        ↓
+Requirements + Models
+        ↓
+━━━━━━━━━━━━━━━━━━━━━━
+PHASE 3 — DESIGN
+How should the system work?
+        ↓
+CHAPTER 7
+User Interface Design
+        ↓
+Screens / Forms / Inputs / Outputs / Validation
+        ↓
+CHAPTER 8
+Data Design
+        ↓
+Entities / Keys / ERD / Normalization / Storage
+        ↓
+CHAPTER 9
+System Architecture
+        ↓
+Clients / Servers / Networks / Processing / Cloud
+        ↓
+SYSTEM DESIGN SPECIFICATION
+━━━━━━━━━━━━━━━━━━━━━━
+        ↓
+جاهز لاحقًا للتنفيذ
+</pre></div></div></section><section class="section" id="method"><div class="section-kicker">خريطة المرحلة</div><h2>كيف سندرس Phase 3؟</h2><div class="block"><p>لن ندرس التقرير كله مرة واحدة؛ هذه <strong>الخريطة التي تمنع الضياع</strong>.</p></div><div class="block"><h4>Chapter 7</h4><p>نبدأ:</p><p><strong>7.1 User Interfaces</strong></p><p>ثم:</p><p><strong>7.2 HCI</strong></p><p>ثم:</p><p><strong>7.3</strong></p><p>وهكذا.</p><p>وبعد Chapter 7:</p><p><strong>تطبيق عملي لتصميم UI.</strong></p></div><div class="block"><h4>Chapter 8</h4><p>نتعلم:</p><ul class="list"><li>ERD</li><li>Keys</li><li>Relationships</li><li>Normalization</li></ul><p>بالتطبيق العملي.</p></div><div class="block"><h4>Chapter 9</h4><p>نبني Architecture للمشروع.</p></div><article class="card"><div class="card-head"><span class="num">★</span><h3>وفي نهاية Phase 3</h3></div><div class="block"><p>نجمعها كلها في:</p></div></article><article class="card"><div class="card-head"><span class="num">★</span><h3>System Design</h3></div></article></section><section class="section" id="goal"><div class="section-kicker">الخلاصة</div><div class="goal"><div aria-hidden="true" class="goal-icon">🎯</div><h3>الهدف النهائي من Phase 3 بجملة واحدة</h3><p>أن تستطيع أخذ النظام الذي تم تحليله في Phase 2 وتحويله إلى تصميم قابل للتنفيذ يحدد كيف سيتعامل المستخدم معه، وكيف ستُنظَّم بياناته، وكيف ستُبنى بنيته التقنية العامة. نتوقف عند Phase 3. لا ننتقل إلى Phase 4 إلا بعد الموافقة الصريحة. Systems Analysis &amp; Design, 13th Edition — Scott Tilley, Cengage International Edition, 2025. Phase 3 في الكتاب:</p></div></section></main></div><div style="max-width:1440px;margin:0 auto;padding:0 24px 32px;position:relative;z-index:1"><div aria-label="التنقل بين المراحل" class="phase-nav"><a href="phase 2.html">← Phase 2 — التحليل</a><a class="home-link" href="index.html">⌂ فهرس المراحل الخمس</a><a href="phase 4.html">Phase 4 — التنفيذ →</a></div></div><footer class="footer"><div class="footer-inner"><div class="f-brand">Phase 3 — Design | تحليل وتصميم النظم</div><p>مبني على المرجع: <strong>Systems Analysis &amp; Design, 13th Edition — Scott Tilley</strong></p><p class="f-note">Chapter 7 · Chapter 8 · Chapter 9 — خريطة كاملة للمرحلة الثالثة</p></div></footer>
+<button aria-label="العودة للأعلى" class="to-top" id="toTop" type="button"><svg aria-hidden="true" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" viewbox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"></path></svg></button><div aria-hidden="true" class="overlay" id="overlay"></div><script>
+(function () {
+  'use strict';
+
+  var root = document.documentElement;
+
+  /* ==========================================================
+     1) Theme
+     ========================================================== */
+  var themeBtn  = document.getElementById('themeBtn');
+  var iconMoon  = document.getElementById('iconMoon');
+  var iconSun   = document.getElementById('iconSun');
+  var metaTheme = document.getElementById('metaTheme');
+
+  var THEME_COLORS = { light: '#0d7377', dark: '#0b1220' };
+
+  function applyTheme(t) {
+    root.setAttribute('data-theme', t);
+    var dark = (t === 'dark');
+    if (iconMoon) iconMoon.style.display = dark ? 'none' : 'block';
+    if (iconSun)  iconSun.style.display  = dark ? 'block' : 'none';
+    if (metaTheme) metaTheme.setAttribute('content', dark ? THEME_COLORS.dark : THEME_COLORS.light);
+    try { localStorage.setItem('sad-theme', t); } catch (e) {}
+  }
+
+  var savedTheme = 'light';
+  try { savedTheme = localStorage.getItem('sad-theme') || 'light'; } catch (e) {}
+  applyTheme(savedTheme);
+
+  if (themeBtn) {
+    themeBtn.addEventListener('click', function () {
+      applyTheme(root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+    });
+  }
+
+  /* ==========================================================
+     2) Print
+     ========================================================== */
+  var printBtn = document.getElementById('printBtn');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () { window.print(); });
+  }
+
+  /* ==========================================================
+     3) Reading progress + back-to-top
+     ========================================================== */
+  var progressBar = document.getElementById('progressBar');
+  var toTop = document.getElementById('toTop');
+
+  function onScroll() {
+    var h = document.documentElement;
+    var scrolled = window.pageYOffset || h.scrollTop || 0;
+    var height = h.scrollHeight - h.clientHeight;
+    var pct = height > 0 ? (scrolled / height) * 100 : 0;
+    if (progressBar) progressBar.style.width = pct + '%';
+    if (toTop) {
+      if (scrolled > 600) toTop.classList.add('show');
+      else toTop.classList.remove('show');
+    }
+  }
+
+  var scrollTicking = false;
+  window.addEventListener('scroll', function () {
+    if (!scrollTicking) {
+      window.requestAnimationFrame(function () { onScroll(); scrollTicking = false; });
+      scrollTicking = true;
+    }
+  }, { passive: true });
+
+  if (toTop) {
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  /* ==========================================================
+     4) Mobile sidebar drawer
+     ========================================================== */
+  var sidebar = document.getElementById('sidebar');
+  var menuBtn = document.getElementById('menuBtn');
+  var overlay = document.getElementById('overlay');
+  var tocClose = document.getElementById('tocClose');
+
+  function isMobile() { return window.innerWidth <= 1080; }
+
+  function openSidebar() {
+    if (!sidebar) return;
+    sidebar.classList.add('open');
+    if (overlay) overlay.classList.add('show');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'true');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeSidebar() {
+    if (!sidebar) return;
+    sidebar.classList.remove('open');
+    if (overlay) overlay.classList.remove('show');
+    if (menuBtn) menuBtn.setAttribute('aria-expanded', 'false');
+    document.body.style.overflow = '';
+  }
+
+  if (menuBtn) {
+    menuBtn.addEventListener('click', function () {
+      if (sidebar.classList.contains('open')) closeSidebar();
+      else openSidebar();
+    });
+  }
+
+  if (overlay) overlay.addEventListener('click', closeSidebar);
+  if (tocClose) tocClose.addEventListener('click', closeSidebar);
+
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape' && sidebar && sidebar.classList.contains('open')) {
+      closeSidebar();
+      if (menuBtn) menuBtn.focus();
+    }
+  });
+
+  if (sidebar) {
+    sidebar.querySelectorAll('a[href^="#"]').forEach(function (a) {
+      a.addEventListener('click', function () {
+        if (isMobile()) closeSidebar();
+      });
+    });
+  }
+
+  var resizeTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function () {
+      if (!isMobile() && sidebar && sidebar.classList.contains('open')) {
+        closeSidebar();
+      }
+    }, 150);
+  });
+
+  /* ==========================================================
+     5) Scroll spy
+     ========================================================== */
+  var tocLinks = Array.prototype.slice.call(
+    document.querySelectorAll('.toc a[href^="#"]')
+  );
+
+  var targets = tocLinks
+    .map(function (a) {
+      var id = a.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      return el ? { link: a, el: el } : null;
+    })
+    .filter(Boolean);
+
+  var offsets = [];
+
+  function computeOffsets() {
+    var scrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+    offsets = targets.map(function (t) {
+      var rect = t.el.getBoundingClientRect();
+      return rect.top + scrollY;
+    });
+  }
+
+  var lastActiveLink = null;
+
+  function setActive() {
+    if (!targets.length) return;
+
+    var fromTop = (window.pageYOffset || document.documentElement.scrollTop || 0) + 130;
+    var current = null;
+
+    for (var i = 0; i < targets.length; i++) {
+      if (offsets[i] <= fromTop) current = targets[i];
+    }
+    if (!current) current = targets[0];
+
+    if (current.link === lastActiveLink) return;
+    lastActiveLink = current.link;
+
+    for (var j = 0; j < tocLinks.length; j++) tocLinks[j].classList.remove('active');
+    current.link.classList.add('active');
+
+    if (sidebar && !isMobile() && sidebar.scrollHeight > sidebar.clientHeight) {
+      var linkTop = current.link.offsetTop;
+      var linkBottom = linkTop + current.link.offsetHeight;
+      if (linkTop < sidebar.scrollTop + 50 ||
+          linkBottom > sidebar.scrollTop + sidebar.clientHeight - 50) {
+        sidebar.scrollTo({
+          top: Math.max(0, linkTop - sidebar.clientHeight / 2),
+          behavior: 'smooth'
+        });
+      }
+    }
+  }
+
+  var spyTicking = false;
+  window.addEventListener('scroll', function () {
+    if (!spyTicking) {
+      window.requestAnimationFrame(function () { setActive(); spyTicking = false; });
+      spyTicking = true;
+    }
+  }, { passive: true });
+
+  /* ==========================================================
+     6) Reveal on scroll
+     ========================================================== */
+  var revealEls = Array.prototype.slice.call(
+    document.querySelectorAll('.card, .mastery, .pipe-item, .table-wrap')
+  );
+
+  function showAllReveals() {
+    revealEls.forEach(function (el) { el.classList.add('in'); });
+  }
+
+  var supportsIO = ('IntersectionObserver' in window);
+
+  if (supportsIO) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.05, rootMargin: '0px 0px -40px 0px' });
+
+    revealEls.forEach(function (el, i) {
+      el.classList.add('reveal');
+      el.style.transitionDelay = (Math.min(i % 6, 5) * 35) + 'ms';
+      io.observe(el);
+    });
+  }
+
+  /* ==========================================================
+     7) Init
+     ========================================================== */
+  function refresh() {
+    computeOffsets();
+    setActive();
+    onScroll();
+  }
+
+  refresh();
+
+  window.addEventListener('load', function () {
+    refresh();
+    setTimeout(function () {
+      revealEls.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight && r.bottom > 0) el.classList.add('in');
+      });
+    }, 400);
+  });
+
+  if (document.fonts && document.fonts.ready && document.fonts.ready.then) {
+    document.fonts.ready.then(function () { refresh(); });
+  }
+
+  var offTimer = null;
+  window.addEventListener('resize', function () {
+    clearTimeout(offTimer);
+    offTimer = setTimeout(function () {
+      computeOffsets();
+      setActive();
+    }, 200);
+  });
+
+  window.addEventListener('orientationchange', function () {
+    setTimeout(refresh, 300);
+  });
+
+  window.addEventListener('beforeprint', showAllReveals);
+
+  /* ==========================================================
+     8) Smooth scroll
+     ========================================================== */
+  document.querySelectorAll('a[href^="#"]').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      var href = link.getAttribute('href');
+      if (!href || href === '#' || href.length < 2) return;
+      var target = document.getElementById(href.slice(1));
+      if (!target) return;
+
+      e.preventDefault();
+
+      var topbar = document.querySelector('.topbar');
+      var offset = topbar ? topbar.offsetHeight + 22 : 90;
+      var y = target.getBoundingClientRect().top +
+              (window.pageYOffset || document.documentElement.scrollTop || 0) -
+              offset;
+
+      window.scrollTo({ top: Math.max(0, y), behavior: 'smooth' });
+
+      if (history.replaceState) {
+        history.replaceState(null, '', href);
+      }
+    });
+  });
+
+})();
+</script><script id="studyV1Script">
+(function(){
+  'use strict';
+  var PHASE_NO = 3;
+  var STORAGE_KEY = 'sad-study-v1-p' + PHASE_NO;
+  var SUMMARY_KEY = 'sad-study-summary-p' + PHASE_NO;
+
+  function safeParse(raw){ try{return JSON.parse(raw||'{}')||{};}catch(e){return {};} }
+  function getState(){ try{return safeParse(localStorage.getItem(STORAGE_KEY));}catch(e){return {};} }
+  function setState(s){ try{localStorage.setItem(STORAGE_KEY,JSON.stringify(s));}catch(e){} }
+  function normalizeText(s){
+    return (s||'').toString().toLowerCase()
+      .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g,'')
+      .replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي')
+      .replace(/\s+/g,' ').trim();
+  }
+
+  var topics = Array.prototype.slice.call(document.querySelectorAll('.card[id]')).filter(function(el){return /^c\d+-\d+$/.test(el.id);});
+  var state = getState();
+
+  function topicTitle(card){
+    var h = card.querySelector('.card-head h3');
+    return h ? h.textContent.trim() : card.id;
+  }
+
+  function ensureButtons(){
+    topics.forEach(function(card){
+      var head = card.querySelector('.card-head');
+      if(!head || head.querySelector('.topic-done-btn')) return;
+      var btn=document.createElement('button');
+      btn.type='button'; btn.className='topic-done-btn'; btn.setAttribute('data-topic-id',card.id);
+      btn.addEventListener('click',function(ev){
+        ev.preventDefault(); ev.stopPropagation();
+        state[card.id]=!state[card.id];
+        if(!state[card.id]) delete state[card.id];
+        setState(state); updateUI();
+      });
+      head.appendChild(btn);
+    });
+  }
+
+  function saveSummary(done,total){
+    var payload={phase:PHASE_NO,done:done,total:total,percent:total?Math.round(done/total*100):0,updated:Date.now()};
+    try{localStorage.setItem(SUMMARY_KEY,JSON.stringify(payload));}catch(e){}
+  }
+
+  function updateUI(){
+    var done=0;
+    topics.forEach(function(card){
+      var complete=!!state[card.id]; if(complete) done++;
+      card.classList.toggle('topic-complete',complete);
+      var btn=card.querySelector('.topic-done-btn');
+      if(btn){
+        btn.classList.toggle('done',complete);
+        btn.setAttribute('aria-pressed', complete ? 'true':'false');
+        btn.textContent=complete ? '✓ تم إتقان الموضوع' : '○ وضع علامة تم';
+        btn.title=(complete?'إلغاء إكمال: ':'وضع علامة إكمال: ')+topicTitle(card);
+      }
+    });
+    var total=topics.length, pct=total?Math.round(done/total*100):0;
+    var pctEl=document.getElementById('studyProgressText');
+    var countEl=document.getElementById('studyProgressCount');
+    if(pctEl) pctEl.textContent=pct+'%';
+    if(countEl) countEl.textContent=done+' / '+total;
+    saveSummary(done,total);
+  }
+
+  function initSearch(){
+    var input=document.getElementById('studySearchInput');
+    var box=document.getElementById('studySearchResults');
+    if(!input||!box) return;
+    var items=[];
+    topics.forEach(function(card){
+      items.push({id:card.id,title:topicTitle(card),text:normalizeText(card.textContent),type:'موضوع'});
+    });
+    Array.prototype.slice.call(document.querySelectorAll('section[id^="ch"]')).forEach(function(sec){
+      var h=sec.querySelector('.chapter-banner h2');
+      if(h) items.push({id:sec.id,title:h.textContent.trim(),text:normalizeText(sec.textContent),type:'فصل'});
+    });
+    input.addEventListener('input',function(){
+      var q=normalizeText(input.value);
+      if(q.length<2){box.classList.remove('show');box.innerHTML='';return;}
+      var matches=items.filter(function(it){return it.text.indexOf(q)!==-1 || normalizeText(it.title).indexOf(q)!==-1;}).slice(0,12);
+      if(!matches.length){box.innerHTML='<div class="study-search-empty">لا توجد نتائج مطابقة</div>';box.classList.add('show');return;}
+      box.innerHTML=matches.map(function(it){return '<a class="study-search-result" href="#'+it.id+'"><b>'+escapeHtml(it.title)+'</b><small>'+it.type+' · '+it.id.replace('c','')+'</small></a>';}).join('');
+      box.classList.add('show');
+      Array.prototype.slice.call(box.querySelectorAll('a')).forEach(function(a){a.addEventListener('click',function(){input.value='';box.classList.remove('show');});});
+    });
+    document.addEventListener('click',function(e){if(!e.target.closest('.study-search')) box.classList.remove('show');});
+  }
+
+  function escapeHtml(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];});}
+
+  ensureButtons(); updateUI(); initSearch();
+})();
+</script>
+<script id="studyV2Script">
+(function(){
+'use strict';
+var PHASE_NO=3;
+var GLOSSARY=[["User Interface (UI)", "نقطة التفاعل بين المستخدم والنظام وتشمل الشاشات والقوائم والنماذج والمخرجات."], ["HCI", "دراسة تفاعل الإنسان مع الحاسوب لتحسين سهولة وفعالية الاستخدام."], ["Usability", "مدى سهولة تعلم النظام واستخدامه بكفاءة ووضوح."], ["Responsive Web Design", "تصميم واجهة تتكيف مع أحجام الشاشات والأجهزة المختلفة."], ["Validation Rule", "قاعدة تتحقق من صحة البيانات المدخلة قبل قبولها."], ["Input Mask", "نمط يحدد شكل إدخال البيانات مثل رقم الهاتف أو التاريخ."], ["Detail Report", "تقرير يعرض السجلات والتفاصيل الفردية."], ["Exception Report", "تقرير يركز على الحالات غير العادية التي تحتاج انتباهًا."], ["Summary Report", "تقرير يقدم معلومات مجمعة وملخصة."], ["DBMS", "نظام برمجي لإدارة قواعد البيانات وتخزينها واسترجاعها وتحديثها."], ["DML", "لغة أو أوامر تستخدم لإضافة البيانات وتحديثها وحذفها واسترجاعها."], ["SQL", "لغة معيارية للاستعلام والتعامل مع قواعد البيانات العلائقية."], ["Schema", "الوصف المنطقي لبنية قاعدة البيانات وجداولها وحقولها وعلاقاتها."], ["Entity", "شيء من العالم الحقيقي نحتاج إلى تخزين بيانات عنه."], ["Record / Tuple", "صف أو سجل يمثل Instance واحدة داخل Table."], ["Primary Key", "حقل أو مجموعة حقول تميز كل Record بشكل فريد."], ["Candidate Key", "حقل يصلح لأن يكون Primary Key."], ["Foreign Key", "حقل يشير إلى Primary Key في Table أخرى لربط البيانات."], ["Referential Integrity", "قواعد تحافظ على صحة العلاقات بين الجداول ومنع المراجع غير الموجودة."], ["ERD", "مخطط يوضح Entities والعلاقات وCardinality بينها."], ["Crow's Foot", "Notation رسومية شائعة لتمثيل Cardinality في ERD."], ["Associative Entity", "كيان وسيط يستخدم عادةً لتحويل علاقة Many-to-Many إلى علاقات أبسط."], ["Normalization", "تنظيم البيانات لتقليل التكرار والمشكلات وتحسين Data Integrity."], ["1NF", "الشكل الطبيعي الأول؛ يزيل المجموعات المتكررة ويجعل القيم ذرية."], ["2NF", "الشكل الطبيعي الثاني؛ يزيل الاعتماد الجزئي على جزء من المفتاح المركب."], ["3NF", "الشكل الطبيعي الثالث؛ يزيل الاعتماد الانتقالي بين الحقول غير المفتاحية."], ["Data Warehouse", "مستودع يجمع بيانات من مصادر متعددة لدعم التحليل والقرارات."], ["Data Mart", "جزء أصغر من مستودع البيانات يخدم قسمًا أو مجالًا محددًا."], ["Data Mining", "تحليل كميات كبيرة من البيانات لاكتشاف Patterns وعلاقات مفيدة."], ["System Architecture", "البنية التقنية الكلية التي توضح مكونات النظام وكيف تعمل وتتصل."], ["Client", "جزء يطلب خدمة أو بيانات وغالبًا يتعامل مباشرة مع المستخدم."], ["Server", "جزء يقدم خدمات أو معالجة أو بيانات للعملاء."], ["Two-Tier", "Architecture من طبقتين يتواصل فيها Client مباشرة مع Server."], ["Three-Tier", "Architecture تفصل Presentation وApplication Logic وData."], ["N-Tier", "Architecture تستخدم عدة Layers لفصل المسؤوليات وتسهيل التوسع."], ["Middleware", "طبقة برمجية تساعد أنظمة أو مكونات مختلفة على التواصل والتكامل."], ["Cloud Computing", "توفير موارد الحوسبة والتخزين والخدمات عبر الشبكة عند الحاجة."], ["Online Processing", "معالجة المعاملة فور حدوثها وتحديث النظام مباشرة."], ["Batch Processing", "تجميع معاملات ومعالجتها كمجموعة في وقت محدد."], ["OSI Model", "نموذج طبقي مرجعي يشرح وظائف الاتصال الشبكي."], ["LAN", "شبكة محلية تغطي مساحة محدودة."], ["WAN", "شبكة واسعة تربط مواقع أو شبكات عبر مسافات كبيرة."], ["Router", "جهاز يوجه البيانات بين الشبكات."], ["Gateway", "نقطة أو جهاز يربط بيئات أو بروتوكولات مختلفة."], ["Proxy Server", "وسيط يستقبل طلبات العميل ويتواصل مع موارد أخرى نيابة عنه."]];
+var COMPLETION_KEY='sad-study-v1-p'+PHASE_NO; // preserve v1 progress
+var LAST_KEY='sad-study-v2-last-p'+PHASE_NO;
+var UI_KEY='sad-study-v2-ui-p'+PHASE_NO;
+function parse(raw){try{return JSON.parse(raw||'{}')||{};}catch(e){return {};}}
+function read(key){try{return parse(localStorage.getItem(key));}catch(e){return {};}}
+function write(key,val){try{localStorage.setItem(key,JSON.stringify(val));}catch(e){}}
+function getDone(){return read(COMPLETION_KEY);}
+function esc(s){return (s||'').replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c];});}
+function norm(s){return (s||'').toLowerCase().replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim();}
+var topics=Array.prototype.slice.call(document.querySelectorAll('.card[id]')).filter(function(x){return /^c\d+-\d+$/.test(x.id);});
+var chapters=Array.prototype.slice.call(document.querySelectorAll('section[id^="ch"]')).filter(function(s){return /^ch\d+$/.test(s.id);});
+function title(card){var h=card.querySelector('.card-head h3');return h?h.textContent.trim():card.id;}
+function currentTopic(){
+  var y=(document.querySelector('.topbar')||{offsetHeight:66}).offsetHeight+42,best=topics[0]||null,bestD=1e9;
+  topics.forEach(function(c){var r=c.getBoundingClientRect();var d=Math.abs(r.top-y);if(r.bottom>y-40&&d<bestD){best=c;bestD=d;}});return best;
+}
+function scrollToCard(card){if(!card)return;card.classList.remove('topic-collapsed');var topbar=document.querySelector('.topbar');var off=(topbar?topbar.offsetHeight:66)+18;var y=card.getBoundingClientRect().top+window.pageYOffset-off;window.scrollTo({top:Math.max(0,y),behavior:'smooth'});remember(card);if(document.body.classList.contains('study-focus'))setFocusTarget(card);}
+function remember(card){if(!card)return;try{localStorage.setItem(LAST_KEY,card.id);}catch(e){}}
+function findIndex(card){return Math.max(0,topics.indexOf(card));}
+function go(delta){var c=currentTopic();if(document.body.classList.contains('study-focus'))c=document.querySelector('.focus-target')||c;var i=findIndex(c),n=i+delta;if(n>=0&&n<topics.length)scrollToCard(topics[n]);}
+
+function addFocusButton(){
+ var actions=document.querySelector('.topbar-actions');if(!actions||document.getElementById('focusBtn'))return;
+ var b=document.createElement('button');b.id='focusBtn';b.type='button';b.className='icon-btn focus-btn';b.title='وضع التركيز (F)';b.setAttribute('aria-label','وضع التركيز');
+ b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M8 3H5a2 2 0 0 0-2 2v3M16 3h3a2 2 0 0 1 2 2v3M8 21H5a2 2 0 0 1-2-2v-3M16 21h3a2 2 0 0 0 2-2v-3"/></svg>';
+ actions.insertBefore(b,actions.firstChild);b.addEventListener('click',toggleFocus);
+}
+function setFocusTarget(card){
+ topics.forEach(function(x){x.classList.remove('focus-target');});chapters.forEach(function(x){x.classList.remove('focus-section');});
+ if(!card)return;card.classList.add('focus-target');var s=card.closest('section');if(s)s.classList.add('focus-section');setTimeout(function(){card.scrollIntoView({block:'start'});window.scrollBy(0,-85);},20);updateMobile();
+}
+function toggleFocus(){
+ var entering=!document.body.classList.contains('study-focus');document.body.classList.toggle('study-focus',entering);var b=document.getElementById('focusBtn');if(b)b.classList.toggle('active',entering);
+ if(entering)setFocusTarget(currentTopic());else{topics.forEach(function(x){x.classList.remove('focus-target');});chapters.forEach(function(x){x.classList.remove('focus-section');});}
+}
+
+function addSidebarTools(){
+ var search=document.querySelector('.study-search'),toc=document.querySelector('.toc');if(!toc||document.querySelector('.study-tools'))return;
+ var d=document.createElement('div');d.className='study-tools';d.innerHTML='<div class="study-tools-title">أدوات الدراسة · Study v2</div><div class="study-tools-grid"><button class="study-tool-btn" data-a="collapse">طي الكل</button><button class="study-tool-btn" data-a="expand">فتح الكل</button><button class="study-tool-btn" data-a="resume">استئناف آخر موضوع</button><button class="study-tool-btn danger" data-a="reset">تصفير التقدم</button></div><div class="shortcut-hint"><span class="kbd">/</span> بحث · <span class="kbd">←</span> التالي · <span class="kbd">→</span> السابق · <span class="kbd">F</span> تركيز</div>';
+ if(search)search.insertAdjacentElement('afterend',d);else toc.insertBefore(d,toc.children[1]||null);
+ d.addEventListener('click',function(e){var b=e.target.closest('button[data-a]');if(!b)return;var a=b.getAttribute('data-a');if(a==='collapse')setAllCollapsed(true);if(a==='expand')setAllCollapsed(false);if(a==='resume')resume(false);if(a==='reset')resetProgress();});
+}
+function addCollapse(){
+ var ui=read(UI_KEY),collapsed=ui.collapsed||{};
+ topics.forEach(function(card){var head=card.querySelector('.card-head');if(!head)return;if(collapsed[card.id])card.classList.add('topic-collapsed');if(!head.querySelector('.topic-collapse-btn')){var b=document.createElement('button');b.type='button';b.className='topic-collapse-btn';b.title='طي / فتح الموضوع';b.setAttribute('aria-label','طي أو فتح الموضوع');b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>';b.addEventListener('click',function(ev){ev.stopPropagation();toggleCard(card);});head.appendChild(b);}});
+}
+function saveCollapsed(){var ui=read(UI_KEY),c={};topics.forEach(function(x){if(x.classList.contains('topic-collapsed'))c[x.id]=1;});ui.collapsed=c;write(UI_KEY,ui);}
+function toggleCard(card){card.classList.toggle('topic-collapsed');saveCollapsed();setTimeout(updateChapterUI,0);}
+function setAllCollapsed(v){topics.forEach(function(x){x.classList.toggle('topic-collapsed',v);});saveCollapsed();}
+
+function addTopicNav(){
+ topics.forEach(function(card,i){if(card.querySelector('.topic-nav'))return;var nav=document.createElement('div');nav.className='topic-nav';var p=i>0?topics[i-1]:null,n=i<topics.length-1?topics[i+1]:null;
+ nav.innerHTML=(p?'<a class="prev" href="#'+p.id+'"><small>الموضوع السابق</small><span>→ '+esc(title(p))+'</span></a>':'<span></span>')+'<span class="nav-spacer" aria-hidden="true"></span>'+(n?'<a class="next" href="#'+n.id+'"><small>الموضوع التالي</small><span>'+esc(title(n))+' ←</span></a>':'<span></span>');
+ nav.querySelectorAll('a').forEach(function(a){a.addEventListener('click',function(e){e.preventDefault();scrollToCard(document.getElementById(a.getAttribute('href').slice(1)));});});card.appendChild(nav);
+ });
+}
+
+function chapterTopics(sec){return Array.prototype.slice.call(sec.querySelectorAll(':scope > .card[id]')).filter(function(x){return /^c\d+-\d+$/.test(x.id);});}
+function addChapterUI(){
+ chapters.forEach(function(sec){var cards=chapterTopics(sec),banner=sec.querySelector('.chapter-banner');if(banner&&!banner.querySelector('.chapter-progress')){var p=document.createElement('div');p.className='chapter-progress';p.innerHTML='<div class="chapter-progress-head"><span>تقدم الفصل</span><b class="chapter-progress-label">0 / '+cards.length+' · 0%</b></div><div class="chapter-progress-track"><div class="chapter-progress-fill"></div></div>';banner.appendChild(p);}
+ if(!sec.querySelector(':scope > .chapter-checklist')){var box=document.createElement('div');box.className='chapter-checklist';box.innerHTML='<div class="chapter-checklist-head"><h3>✓ Chapter Checklist — هل أتقنت موضوعات الفصل؟</h3><span class="check-pct">0%</span></div><div class="chapter-checklist-list">'+cards.map(function(c){return '<button type="button" class="chapter-check-item" data-target="'+c.id+'"><span class="check-box">✓</span><span>'+esc(title(c))+'</span></button>';}).join('')+'</div>';box.addEventListener('click',function(e){var b=e.target.closest('.chapter-check-item');if(!b)return;var c=document.getElementById(b.getAttribute('data-target'));if(c){var done=c.querySelector('.topic-done-btn');if(done)done.click();}});sec.appendChild(box);}
+ });updateChapterUI();
+}
+function updateChapterUI(){
+ chapters.forEach(function(sec){var cards=chapterTopics(sec),done=cards.filter(function(c){return c.classList.contains('topic-complete');}).length,pct=cards.length?Math.round(done/cards.length*100):0;var lab=sec.querySelector('.chapter-progress-label'),fill=sec.querySelector('.chapter-progress-fill'),cp=sec.querySelector('.check-pct');if(lab)lab.textContent=done+' / '+cards.length+' · '+pct+'%';if(fill)fill.style.width=pct+'%';if(cp)cp.textContent=pct+'%';sec.querySelectorAll('.chapter-check-item').forEach(function(b){var c=document.getElementById(b.getAttribute('data-target'));b.classList.toggle('done',!!(c&&c.classList.contains('topic-complete')));});
+ });updateMobile();
+}
+
+function addGlossary(){
+ var content=document.querySelector('.content');if(!content||document.getElementById('phase-glossary'))return;var goal=document.getElementById('goal');var sec=document.createElement('section');sec.className='section glossary-section';sec.id='phase-glossary';sec.innerHTML='<div class="section-kicker">مرجع سريع</div><h2>Glossary — مصطلحات Phase '+PHASE_NO+'</h2><p class="section-sub">قاموس مختصر لأهم المصطلحات في هذه المرحلة. استخدم البحث للوصول إلى المصطلح بسرعة.</p><div class="glossary-tools"><div class="glossary-search"><input id="phaseGlossarySearch" type="search" placeholder="ابحث في المصطلحات..." aria-label="البحث في مصطلحات المرحلة"></div><span class="glossary-count" id="phaseGlossaryCount"></span></div><div class="glossary-grid" id="phaseGlossaryGrid"></div>';
+ if(goal)content.insertBefore(sec,goal);else content.appendChild(sec);
+ var toc=document.querySelector('.toc');if(toc){var grp=document.createElement('div');grp.className='toc-group';grp.innerHTML='<a class="toc-label" href="#phase-glossary"><span class="toc-num">G</span> Glossary المصطلحات</a>';toc.appendChild(grp);}
+ var input=sec.querySelector('#phaseGlossarySearch'),grid=sec.querySelector('#phaseGlossaryGrid'),count=sec.querySelector('#phaseGlossaryCount');
+ function render(){var q=norm(input.value),list=GLOSSARY.filter(function(x){return !q||norm(x[0]+' '+x[1]).indexOf(q)!==-1;});grid.innerHTML=list.map(function(x){return '<article class="glossary-item"><div class="glossary-term">'+esc(x[0])+'</div><div class="glossary-def">'+esc(x[1])+'</div></article>';}).join('');count.textContent=list.length+' مصطلح';}
+ input.addEventListener('input',render);render();
+}
+
+function addMobileBar(){
+ if(document.getElementById('mobileStudyBar'))return;var d=document.createElement('div');d.className='mobile-study-bar';d.id='mobileStudyBar';d.innerHTML='<button type="button" id="mobilePrev">→ السابق</button><button type="button" class="primary" id="mobileDone">○ تم</button><button type="button" id="mobileNext">التالي ←</button>';document.body.appendChild(d);document.getElementById('mobilePrev').addEventListener('click',function(){go(-1)});document.getElementById('mobileNext').addEventListener('click',function(){go(1)});document.getElementById('mobileDone').addEventListener('click',function(){var c=document.querySelector('.focus-target')||currentTopic();var b=c&&c.querySelector('.topic-done-btn');if(b)b.click();});updateMobile();
+}
+function updateMobile(){var c=document.querySelector('.focus-target')||currentTopic();if(!c)return;var i=findIndex(c),p=document.getElementById('mobilePrev'),n=document.getElementById('mobileNext'),d=document.getElementById('mobileDone');if(p){p.disabled=i<=0;p.textContent=i>0?'→ '+title(topics[i-1]):'→ السابق';}if(n){n.disabled=i>=topics.length-1;n.textContent=i<topics.length-1?title(topics[i+1])+' ←':'التالي ←';}if(d){var done=c.classList.contains('topic-complete');d.classList.toggle('done',done);d.textContent=done?'✓ تم':'○ وضع علامة تم';}}
+
+function resetProgress(){if(!window.confirm('هل تريد تصفير تقدم هذه المرحلة؟ سيتم حذف علامات «تم» فقط لهذه المرحلة.'))return;try{localStorage.removeItem(COMPLETION_KEY);localStorage.removeItem('sad-study-summary-p'+PHASE_NO);localStorage.removeItem(LAST_KEY);}catch(e){}location.reload();}
+function resume(auto){var id='';try{id=localStorage.getItem(LAST_KEY)||'';}catch(e){}var c=id&&document.getElementById(id);if(!c)return false;scrollToCard(c);if(auto){var t=document.createElement('div');t.className='resume-toast show';t.textContent='↩ تم استئناف آخر موضوع: '+title(c);document.body.appendChild(t);setTimeout(function(){t.classList.remove('show');setTimeout(function(){t.remove();},250);},1800);}return true;}
+
+var scrollTick=false;window.addEventListener('scroll',function(){if(scrollTick)return;scrollTick=true;requestAnimationFrame(function(){var c=currentTopic();if(c)remember(c);updateMobile();scrollTick=false;});},{passive:true});
+
+document.addEventListener('click',function(e){if(e.target.closest('.topic-done-btn'))setTimeout(updateChapterUI,30);var card=e.target.closest('.card[id]');if(card&&/^c\d+-\d+$/.test(card.id))remember(card);});
+
+document.addEventListener('keydown',function(e){var tag=(e.target.tagName||'').toLowerCase();var typing=tag==='input'||tag==='textarea'||e.target.isContentEditable;if(e.key==='/'&&!typing){e.preventDefault();var s=document.getElementById('studySearchInput');if(s){s.focus();s.select();}return;}if(typing){if(e.key==='Escape')e.target.blur();return;}if(e.key==='ArrowLeft'){e.preventDefault();go(1);}else if(e.key==='ArrowRight'){e.preventDefault();go(-1);}else if((e.key==='f'||e.key==='F')){e.preventDefault();toggleFocus();}else if(e.key==='Escape'&&document.body.classList.contains('study-focus'))toggleFocus();});
+
+addFocusButton();addSidebarTools();addCollapse();addTopicNav();addChapterUI();addGlossary();addMobileBar();updateChapterUI();
+setTimeout(function(){if(!location.hash)resume(true);},650);
+})();
+</script>
+<script id="studyV21Script">(function(){'use strict';
+var PHASE_NO=3,PHASE_EN="Design",PHASE_AR="التصميم",GLOSSARY=[["User Interface (UI)", "نقطة التفاعل بين المستخدم والنظام وتشمل الشاشات والقوائم والنماذج والمخرجات."], ["HCI", "دراسة تفاعل الإنسان مع الحاسوب لتحسين سهولة وفعالية الاستخدام."], ["Usability", "مدى سهولة تعلم النظام واستخدامه بكفاءة ووضوح."], ["Responsive Web Design", "تصميم واجهة تتكيف مع أحجام الشاشات والأجهزة المختلفة."], ["Validation Rule", "قاعدة تتحقق من صحة البيانات المدخلة قبل قبولها."], ["Input Mask", "نمط يحدد شكل إدخال البيانات مثل رقم الهاتف أو التاريخ."], ["Detail Report", "تقرير يعرض السجلات والتفاصيل الفردية."], ["Exception Report", "تقرير يركز على الحالات غير العادية التي تحتاج انتباهًا."], ["Summary Report", "تقرير يقدم معلومات مجمعة وملخصة."], ["DBMS", "نظام برمجي لإدارة قواعد البيانات وتخزينها واسترجاعها وتحديثها."], ["DML", "لغة أو أوامر تستخدم لإضافة البيانات وتحديثها وحذفها واسترجاعها."], ["SQL", "لغة معيارية للاستعلام والتعامل مع قواعد البيانات العلائقية."], ["Schema", "الوصف المنطقي لبنية قاعدة البيانات وجداولها وحقولها وعلاقاتها."], ["Entity", "شيء من العالم الحقيقي نحتاج إلى تخزين بيانات عنه."], ["Record / Tuple", "صف أو سجل يمثل Instance واحدة داخل Table."], ["Primary Key", "حقل أو مجموعة حقول تميز كل Record بشكل فريد."], ["Candidate Key", "حقل يصلح لأن يكون Primary Key."], ["Foreign Key", "حقل يشير إلى Primary Key في Table أخرى لربط البيانات."], ["Referential Integrity", "قواعد تحافظ على صحة العلاقات بين الجداول ومنع المراجع غير الموجودة."], ["ERD", "مخطط يوضح Entities والعلاقات وCardinality بينها."], ["Crow's Foot", "Notation رسومية شائعة لتمثيل Cardinality في ERD."], ["Associative Entity", "كيان وسيط يستخدم عادةً لتحويل علاقة Many-to-Many إلى علاقات أبسط."], ["Normalization", "تنظيم البيانات لتقليل التكرار والمشكلات وتحسين Data Integrity."], ["1NF", "الشكل الطبيعي الأول؛ يزيل المجموعات المتكررة ويجعل القيم ذرية."], ["2NF", "الشكل الطبيعي الثاني؛ يزيل الاعتماد الجزئي على جزء من المفتاح المركب."], ["3NF", "الشكل الطبيعي الثالث؛ يزيل الاعتماد الانتقالي بين الحقول غير المفتاحية."], ["Data Warehouse", "مستودع يجمع بيانات من مصادر متعددة لدعم التحليل والقرارات."], ["Data Mart", "جزء أصغر من مستودع البيانات يخدم قسمًا أو مجالًا محددًا."], ["Data Mining", "تحليل كميات كبيرة من البيانات لاكتشاف Patterns وعلاقات مفيدة."], ["System Architecture", "البنية التقنية الكلية التي توضح مكونات النظام وكيف تعمل وتتصل."], ["Client", "جزء يطلب خدمة أو بيانات وغالبًا يتعامل مباشرة مع المستخدم."], ["Server", "جزء يقدم خدمات أو معالجة أو بيانات للعملاء."], ["Two-Tier", "Architecture من طبقتين يتواصل فيها Client مباشرة مع Server."], ["Three-Tier", "Architecture تفصل Presentation وApplication Logic وData."], ["N-Tier", "Architecture تستخدم عدة Layers لفصل المسؤوليات وتسهيل التوسع."], ["Middleware", "طبقة برمجية تساعد أنظمة أو مكونات مختلفة على التواصل والتكامل."], ["Cloud Computing", "توفير موارد الحوسبة والتخزين والخدمات عبر الشبكة عند الحاجة."], ["Online Processing", "معالجة المعاملة فور حدوثها وتحديث النظام مباشرة."], ["Batch Processing", "تجميع معاملات ومعالجتها كمجموعة في وقت محدد."], ["OSI Model", "نموذج طبقي مرجعي يشرح وظائف الاتصال الشبكي."], ["LAN", "شبكة محلية تغطي مساحة محدودة."], ["WAN", "شبكة واسعة تربط مواقع أو شبكات عبر مسافات كبيرة."], ["Router", "جهاز يوجه البيانات بين الشبكات."], ["Gateway", "نقطة أو جهاز يربط بيئات أو بروتوكولات مختلفة."], ["Proxy Server", "وسيط يستقبل طلبات العميل ويتواصل مع موارد أخرى نيابة عنه."]],GLOBAL_LAST_KEY='sad-study-global-last-v21',FILTER_KEY='sad-study-v21-filter-p'+PHASE_NO;
+function norm(s){return(s||'').toLowerCase().replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/\s+/g,' ').trim()}function esc(s){return(s||'').replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]})}
+function topics(){return[].slice.call(document.querySelectorAll('.card[id]')).filter(function(x){return/^c\d+-\d+$/.test(x.id)})}function chapters(){return[].slice.call(document.querySelectorAll('section[id^="ch"]')).filter(function(x){return/^ch\d+$/.test(x.id)})}function title(c){var h=c&&c.querySelector('.card-head h3');return h?h.textContent.trim():(c?c.id:'')}
+function current(){var l=topics().filter(function(c){return!c.classList.contains('study-filter-hidden')});if(!l.length)return null;var y=(document.querySelector('.topbar')||{offsetHeight:66}).offsetHeight+48,b=l[0],d=1e9;l.forEach(function(c){var r=c.getBoundingClientRect(),x=Math.abs(r.top-y);if(r.bottom>y-50&&x<d){b=c;d=x}});return b}
+function mark(c){if(!c)return;try{localStorage.setItem(GLOBAL_LAST_KEY,JSON.stringify({phase:PHASE_NO,id:c.id,title:title(c),phase_en:PHASE_EN,phase_ar:PHASE_AR,ts:Date.now()}))}catch(e){}}
+function scrollToTopic(c){if(!c)return;c.classList.remove('topic-collapsed');var off=(document.querySelector('.topbar')||{offsetHeight:66}).offsetHeight+18;window.scrollTo({top:Math.max(0,c.getBoundingClientRect().top+pageYOffset-off),behavior:'smooth'});mark(c)}
+document.querySelectorAll('.study-version-pill,.study-v2-label').forEach(function(x){x.textContent='Study v2.1'});
+function prepStatus(){document.querySelectorAll('.toc-list a[href^="#c"]').forEach(function(a){if(a.querySelector('.topic-status'))return;var t=document.createElement('span');t.className='toc-topic-text';while(a.firstChild)t.appendChild(a.firstChild);var s=document.createElement('span');s.className='topic-status';s.setAttribute('aria-hidden','true');s.textContent='○';a.appendChild(s);a.appendChild(t)});updStatus()}
+function updStatus(){var cur=current();document.querySelectorAll('.toc-list a[href^="#c"]').forEach(function(a){var id=(a.getAttribute('href')||'').slice(1),c=document.getElementById(id),s=a.querySelector('.topic-status'),done=!!(c&&c.classList.contains('topic-complete')),now=!!(cur&&cur.id===id);a.classList.toggle('is-done',done);a.classList.toggle('is-current',now);if(s)s.textContent=done?'✓':(now?'◐':'○')})}
+function addOverview(){chapters().forEach(function(sec){if(sec.querySelector(':scope > .chapter-overview'))return;var b=sec.querySelector(':scope > .chapter-banner');if(!b)return;var l=[].slice.call(sec.querySelectorAll(':scope > .card[id]')).filter(function(c){return/^c\d+-\d+$/.test(c.id)}),important=l.filter(function(c){return!!c.querySelector('.badge.b-red')}).length,d=b.querySelector('p'),box=document.createElement('div');box.className='chapter-overview';box.innerHTML='<div class="chapter-overview-main"><h3>خريطة الفصل</h3><p>'+esc(d?d.textContent.trim():'هذا الفصل جزء من مسار المرحلة، ويفضل دراسته بالترتيب.')+'</p></div><div class="chapter-overview-stat"><b>'+l.length+'</b><span>موضوعًا</span></div><div class="chapter-overview-stat"><b>'+important+'</b><span>أولوية عالية</span></div><div class="chapter-overview-stat"><b class="overview-progress">0%</b><span>مكتمل</span></div>';b.insertAdjacentElement('afterend',box)});updOverview()}
+function updOverview(){chapters().forEach(function(sec){var l=[].slice.call(sec.querySelectorAll(':scope > .card[id]')).filter(function(c){return/^c\d+-\d+$/.test(c.id)}),d=l.filter(function(c){return c.classList.contains('topic-complete')}).length,p=l.length?Math.round(d/l.length*100):0,e=sec.querySelector('.overview-progress');if(e)e.textContent=p+'%'})}
+function ensureFilter(){var g=document.querySelector('.study-tools-grid');if(!g||g.querySelector('[data-a="unfinished"]'))return;var b=document.createElement('button');b.type='button';b.className='study-tool-btn';b.dataset.a='unfinished';b.textContent='غير المكتمل فقط';g.appendChild(b);b.onclick=function(){setFilter(!document.body.classList.contains('only-unfinished'))};var on=false;try{on=localStorage.getItem(FILTER_KEY)==='1'}catch(e){}setFilter(on)}
+function setFilter(on){document.body.classList.toggle('only-unfinished',on);var b=document.querySelector('[data-a="unfinished"]');if(b)b.classList.toggle('active',on);topics().forEach(function(c){c.classList.toggle('study-filter-hidden',on&&c.classList.contains('topic-complete'))});chapters().forEach(function(sec){var l=[].slice.call(sec.querySelectorAll(':scope > .card[id]')).filter(function(c){return/^c\d+-\d+$/.test(c.id)}),note=sec.querySelector(':scope > .chapter-all-done-note');if(!note){note=document.createElement('div');note.className='chapter-all-done-note';note.textContent='✓ أنهيت جميع موضوعات هذا الفصل. أوقف فلتر «غير المكتمل فقط» لعرضها.';var ov=sec.querySelector(':scope > .chapter-overview');if(ov)ov.insertAdjacentElement('afterend',note)}note.classList.toggle('show',on&&l.length&&l.every(function(c){return c.classList.contains('topic-complete')}))});try{localStorage.setItem(FILTER_KEY,on?'1':'0')}catch(e){}updStatus();refreshMobile()}
+function tooltips(){if(!GLOSSARY.length)return;var sorted=GLOSSARY.slice().filter(function(x){return x[0].length>=3}).sort(function(a,b){return b[0].length-a[0].length});topics().forEach(function(card){var used={},count=0,roots=card.querySelectorAll('.block p,.block li,.callout .co-body');for(var r=0;r<roots.length&&count<3;r++){var w=document.createTreeWalker(roots[r],NodeFilter.SHOW_TEXT,{acceptNode:function(n){var p=n.parentElement;if(!p||!n.nodeValue.trim()||p.closest('a,button,code,pre,.glossary-inline,.chip,.badge'))return NodeFilter.FILTER_REJECT;return NodeFilter.FILTER_ACCEPT}}),nodes=[],n;while(n=w.nextNode())nodes.push(n);for(var i=0;i<nodes.length&&count<3;i++){var txt=nodes[i].nodeValue,low=txt.toLowerCase(),hit=null;for(var j=0;j<sorted.length;j++){var term=sorted[j][0],key=norm(term);if(used[key])continue;var idx=low.indexOf(term.toLowerCase());if(idx>=0){hit={term:term,def:sorted[j][1],idx:idx};break}}if(!hit)continue;var sp=document.createElement('span');sp.className='glossary-inline';sp.tabIndex=0;sp.dataset.term=hit.term;sp.dataset.def=hit.def;sp.textContent=txt.substr(hit.idx,hit.term.length);var f=document.createDocumentFragment();f.appendChild(document.createTextNode(txt.slice(0,hit.idx)));f.appendChild(sp);f.appendChild(document.createTextNode(txt.slice(hit.idx+hit.term.length)));nodes[i].parentNode.replaceChild(f,nodes[i]);used[norm(hit.term)]=1;count++}}});var pop=document.createElement('div');pop.className='glossary-popover';pop.id='glossaryPopover';pop.setAttribute('role','tooltip');document.body.appendChild(pop);function show(el){pop.innerHTML='<b>'+esc(el.dataset.term)+'</b><p>'+esc(el.dataset.def)+'</p>';pop.classList.add('show');var r=el.getBoundingClientRect(),w=Math.min(330,innerWidth-28),left=Math.min(innerWidth-w-14,Math.max(14,r.left+r.width/2-w/2)),top=r.bottom+9;if(top+150>innerHeight)top=Math.max(14,r.top-150);pop.style.left=left+'px';pop.style.top=top+'px'}function hide(){pop.classList.remove('show')}document.addEventListener('click',function(e){var el=e.target.closest('.glossary-inline');if(el){e.preventDefault();show(el)}else hide()});document.addEventListener('focusin',function(e){var el=e.target.closest&&e.target.closest('.glossary-inline');if(el)show(el)});document.addEventListener('keydown',function(e){if(e.key==='Escape')hide()})}
+function mobileToc(){var toc=document.querySelector('.toc');if(!toc)return;if(!toc.querySelector('.mobile-toc-progress')){var x=document.createElement('div');x.className='mobile-toc-progress';x.id='mobileTocProgress';var t=toc.querySelector('.toc-title');if(t)t.insertAdjacentElement('afterend',x)}toc.querySelectorAll('.toc-group').forEach(function(g){var l=g.querySelector(':scope > .toc-list');if(!l)return;g.classList.add('has-topic-list');if(!g.querySelector(':scope > .toc-accordion-btn')){var b=document.createElement('button');b.type='button';b.className='toc-accordion-btn';b.setAttribute('aria-label','فتح أو طي موضوعات الفصل');b.innerHTML='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="m6 9 6 6 6-6"/></svg>';g.insertBefore(b,l);b.onclick=function(e){e.preventDefault();e.stopPropagation();g.classList.toggle('mobile-open')}}});updMobileToc()}
+function updMobileToc(){var cur=current(),a=cur&&document.querySelector('.toc-list a[href="#'+cur.id+'"]');document.querySelectorAll('.toc-group.has-topic-list').forEach(function(g){if(a&&g.contains(a))g.classList.add('mobile-open')});var l=topics(),d=l.filter(function(c){return c.classList.contains('topic-complete')}).length,x=document.getElementById('mobileTocProgress');if(x)x.textContent='تقدم المرحلة: '+d+' / '+l.length+' موضوعًا'}
+function refreshMobile(){var c=current();if(!c)return;var v=topics().filter(function(x){return!x.classList.contains('study-filter-hidden')}),i=v.indexOf(c),p=document.getElementById('mobilePrev'),n=document.getElementById('mobileNext');if(p){p.disabled=i<=0;p.textContent=i>0?'→ '+title(v[i-1]):'→ السابق'}if(n){n.disabled=i<0||i>=v.length-1;n.textContent=i>=0&&i<v.length-1?title(v[i+1])+' ←':'التالي ←'}}
+document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#mobilePrev,#mobileNext');if(b&&document.body.classList.contains('only-unfinished')){e.preventDefault();e.stopImmediatePropagation();var v=topics().filter(function(x){return!x.classList.contains('study-filter-hidden')}),c=current(),i=v.indexOf(c),d=b.id==='mobileNext'?1:-1,k=i+d;if(k>=0&&k<v.length)scrollToTopic(v[k]);return}var card=e.target.closest&&e.target.closest('.card[id]');if(card&&/^c\d+-\d+$/.test(card.id))mark(card);if(e.target.closest&&e.target.closest('.topic-done-btn'))setTimeout(function(){setFilter(document.body.classList.contains('only-unfinished'));updOverview();updStatus();updMobileToc()},70)},true)
+var tick=0;window.addEventListener('scroll',function(){if(Date.now()-tick<450)return;tick=Date.now();var c=current();if(c)mark(c);updStatus();updMobileToc()},{passive:true});window.addEventListener('hashchange',function(){var c=document.getElementById(location.hash.slice(1));if(c&&/^c\d+-\d+$/.test(c.id))mark(c)});
+prepStatus();addOverview();ensureFilter();tooltips();mobileToc();updOverview();updStatus();updMobileToc();refreshMobile();var ini=location.hash&&document.getElementById(location.hash.slice(1));if(ini&&/^c\d+-\d+$/.test(ini.id))mark(ini);
+})();</script></body></html>
